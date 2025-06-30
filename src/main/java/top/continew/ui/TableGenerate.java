@@ -3,19 +3,16 @@ package top.continew.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
-import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import top.continew.constant.GenerateConstant;
 import top.continew.entity.SqlColumn;
 import top.continew.utils.DataSourceUtils;
@@ -29,6 +26,7 @@ public class TableGenerate extends DialogWrapper {
     private JPanel rootPanel;
     private JTable columnTable;
     private static final String[] columnList;
+    private static final String[] FORM_TYPE_OPTIONS = {"文本框", "单选框", "多选框", "日期", "下拉框"};
 
     static {
         columnList = new String[]{
@@ -116,6 +114,10 @@ public class TableGenerate extends DialogWrapper {
         columnTable.getTableHeader().repaint();
         columnTable.setModel(model);
         columnTable.repaint();
+        // 设置表单类型为下拉框
+        TableColumn formTypeColumn = columnTable.getColumnModel().getColumn(10);
+        JComboBox<String> formTypeComboBox = new JComboBox<>(FORM_TYPE_OPTIONS);
+        formTypeColumn.setCellEditor(new DefaultCellEditor(formTypeComboBox));
     }
 
     @Override
