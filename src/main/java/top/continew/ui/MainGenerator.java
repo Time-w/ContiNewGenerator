@@ -53,16 +53,16 @@ public class MainGenerator extends DialogWrapper {
 	private JButton configFilePathButton;
 	private JLabel configFilePathLabel;
 
-	private static final MainGenerator instance = null;
+	private static MainGenerator instance = null;
 
 	public static MainGenerator getInstance(Project project) {
 		if (instance == null) {
-			return new MainGenerator(project);
+			instance = new MainGenerator(project);
 		}
 		return instance;
 	}
 
-	protected MainGenerator(@Nullable Project project) {
+	protected MainGenerator(Project project) {
 		super(project);
 		setTitle("ContiNew Generator");
 		setModal(true);
