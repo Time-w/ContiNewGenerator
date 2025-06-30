@@ -4,7 +4,7 @@ package top.continew.constant;
  * @author lww
  * @date 2025-06-30 19:00
  */
-public class GenerateConstant {
+public interface GenerateConstant {
 
 	String excludeTables = "DATABASECHANGELOG,DATABASECHANGELOGLOCK,gen_config,gen_field_config";
 
