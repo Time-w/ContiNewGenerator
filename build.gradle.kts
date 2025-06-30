@@ -48,15 +48,18 @@ dependencies {
 //    implementation("org.springframework.boot:spring-boot-starter-web:2.3.4.RELEASE")
 //    implementation("com.alibaba:druid-spring-boot-starter:1.2.23")
 //    implementation ("com.baomidou:mybatis-plus-boot-starter:3.4.2")
-    implementation("com.baomidou:mybatis-plus-generator:3.4.1")
+    implementation("org.yaml:snakeyaml:2.0")
     implementation("org.freemarker:freemarker:2.3.28")
-    implementation("com.baomidou:mybatis-plus:3.5.3.1")
+
     implementation("com.mysql:mysql-connector-j:8.2.0")
-    implementation("com.alibaba:druid:1.2.16")
-    implementation("org.springframework:spring-jdbc:5.3.39")
+    implementation("com.zaxxer:HikariCP:5.0.1"){
+        exclude(group = "org.slf4j")
+    }
+
+    implementation("com.baomidou:mybatis-plus:3.5.3.1")
 
     implementation("org.apache.commons:commons-lang3:3.12.0")
-    implementation("log4j:log4j:1.2.17")
+//    implementation("log4j:log4j:1.2.17")
     implementation("com.alibaba:fastjson:1.2.83")
 }
 

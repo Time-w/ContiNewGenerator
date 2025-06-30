@@ -19,6 +19,9 @@ public class PluginIconsUtils {
 	public static final Icon promptInput = load("/icons/promptInput.svg");
 	public static final Icon promptInput_dark = load("/icons/promptInput_dark.svg");
 
+	public static final Icon propertiesFile = load("/icons/propertiesFile.svg");
+	public static final Icon propertiesFile_dark = load("/icons/propertiesFile_dark.svg");
+
 	public static Icon load(String iconPath) {
 		return IconLoader.getIcon(iconPath, PluginIconsUtils.class);
 	}

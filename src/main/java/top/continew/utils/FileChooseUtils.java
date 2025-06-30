@@ -39,4 +39,16 @@ public class FileChooseUtils {
 		return FileChooser.chooseFile(descriptor, this.project, toSelect);
 	}
 
+	public VirtualFile showSingleFileSelectionDialog(String title, VirtualFile toSelect, VirtualFile... roots) {
+		if (title == null) {
+			return null;
+		}
+		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor();
+		descriptor.setTitle(title);
+		if (null != roots) {
+			descriptor.setRoots(roots);
+		}
+		return FileChooser.chooseFile(descriptor, this.project, toSelect);
+	}
+
 }

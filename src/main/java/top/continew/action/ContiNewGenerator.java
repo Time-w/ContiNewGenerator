@@ -2,13 +2,16 @@ package top.continew.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
 import top.continew.ui.MainGenerator;
 
 public class ContiNewGenerator extends AnAction {
 
 	@Override
 	public void actionPerformed(AnActionEvent e) {
-		MainGenerator instance = MainGenerator.getInstance(e.getProject());
+		Project project = e.getProject();
+		//YamlConfigReader.printDbConfig(project);
+		MainGenerator instance = MainGenerator.getInstance(project);
 		instance.show();
 	}
 }
