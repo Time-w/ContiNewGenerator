@@ -6,21 +6,17 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import org.yaml.snakeyaml.Yaml;
+import top.continew.persistent.ContiNewGeneratorPersistent;
 import top.continew.utils.DataSourceUtils;
 import top.continew.utils.FileChooseUtils;
 import top.continew.utils.PluginIconsUtils;
@@ -73,6 +69,44 @@ public class MainGenerator extends DialogWrapper {
 		setResizable(false);
 		this.init();
 
+		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
+		//回显数据
+		String projectPath = instance.getProjectPath();
+		if (StringUtils.isNotEmpty(projectPath)) {
+			this.projectPathTextField.setText(projectPath);
+		}
+		String configPath = instance.getConfigPath();
+		if (StringUtils.isNotEmpty(configPath)) {
+			this.configFilePathTextField.setText(configPath);
+		}
+		String author = instance.getAuthor();
+		if (StringUtils.isNotEmpty(author)) {
+			this.authorTextField.setText(author);
+		}
+		String packageName = instance.getPackageName();
+		if (StringUtils.isNotEmpty(packageName)) {
+			this.packageNameTextField.setText(packageName);
+		}
+		String tablePrefix = instance.getTablePrefix();
+		if (StringUtils.isNotEmpty(tablePrefix)) {
+			this.tablePrefixTextField.setText(tablePrefix);
+		}
+		String version = instance.getVersion();
+		if (StringUtils.isNotEmpty(version)) {
+			this.versionTextField.setText(version);
+		}
+		String createDate = instance.getCreateDate();
+		if (StringUtils.isNotEmpty(createDate)) {
+			this.createTimeTextField.setText(createDate);
+		}
+		String updateDate = instance.getUpdateDate();
+		if (StringUtils.isNotEmpty(updateDate)) {
+			this.updateTimeTextField.setText(updateDate);
+		}
+		String logicalDelete = instance.getLogicalDelete();
+		if (StringUtils.isNotEmpty(logicalDelete)) {
+			this.logicDeleteTextField.setText(logicalDelete);
+		}
 		configFilePathButton.setIcon(PluginIconsUtils.propertiesFile);
 		configFilePathButton.addActionListener(e -> {
 			FileChooseUtils uiComponentFacade = FileChooseUtils.getInstance(project);
@@ -84,6 +118,7 @@ public class MainGenerator extends DialogWrapper {
 			if (null != vf) {
 				String path = vf.getPath();
 				this.configFilePathTextField.setText(path);
+				instance.setConfigPath(path);
 				try {
 					HikariConfig config = DataSourceUtils.getDataSourceConfig(project, vf);
 					HikariDataSource dataSource = new HikariDataSource(config);
@@ -106,6 +141,7 @@ public class MainGenerator extends DialogWrapper {
 			final VirtualFile vf = uiComponentFacade.showSingleFolderSelectionDialog("选择项目路径", baseDir, baseDir);
 			if (null != vf) {
 				this.projectPathTextField.setText(vf.getPath());
+				instance.setProjectPath(vf.getPath());
 			}
 		});
 

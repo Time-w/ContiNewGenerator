@@ -18,10 +18,15 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "ContiNewGeneratorPersistent", storages = {@Storage("ContiNewGeneratorPersistent.xml")})
 public class ContiNewGeneratorPersistent implements PersistentStateComponent<ContiNewGeneratorPersistent> {
 
-	private String dbType;
-	private String dbName;
-	private String username;
-	private String dbUrl;
+	private String projectPath;
+	private String configPath;
+	private String author;
+	private String packageName;
+	private String tablePrefix;
+	private String version;
+	private String createDate;
+	private String updateDate;
+	private String logicalDelete;
 
 	public static ContiNewGeneratorPersistent getInstance(Project project) {
 		ContiNewGeneratorPersistent config = project.getService(ContiNewGeneratorPersistent.class);
