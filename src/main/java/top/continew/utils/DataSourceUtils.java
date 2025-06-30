@@ -19,6 +19,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -37,6 +38,9 @@ public class DataSourceUtils {
 	}
 
 	public static void initDataSource(Project project, VirtualFile vf) {
+		if (dataSource != null && StringUtils.isNotEmpty(dbName)) {
+			return;
+		}
 		HikariConfig config = getDataSourceConfig(project, vf);
 		if (config != null) {
 			try {
