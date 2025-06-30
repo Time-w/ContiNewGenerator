@@ -115,6 +115,7 @@ public class TableGenerate extends DialogWrapper {
         }
         columnTable.getTableHeader().repaint();
         columnTable.setModel(model);
+        columnTable.repaint();
     }
 
     @Override
