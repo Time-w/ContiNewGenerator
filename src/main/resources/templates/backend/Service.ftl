@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.service;
 
 import top.continew.starter.extension.crud.service.BaseService;
 import ${packageName}.model.query.${classNamePrefix}Query;

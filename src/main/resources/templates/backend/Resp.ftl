@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.resp;
 
 import lombok.Data;
 
@@ -33,6 +33,10 @@ public class ${className} extends BaseResp {
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
     <#if fieldConfig.showInList>
+
+     <#if respExcludeFields?seq_contains(fieldConfig.fieldName)>
+          <#continue>
+     </#if>
 
     /**
      * ${fieldConfig.comment}

@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.query;
 
 import lombok.Data;
 

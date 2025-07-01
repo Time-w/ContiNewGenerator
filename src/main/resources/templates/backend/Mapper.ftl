@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.mapper;
 
 import top.continew.starter.data.mp.base.BaseMapper;
 import ${packageName}.model.entity.${classNamePrefix}DO;

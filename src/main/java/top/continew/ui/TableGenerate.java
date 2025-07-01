@@ -44,6 +44,7 @@ import top.continew.enums.QueryTypeEnum;
 import top.continew.persistent.ContiNewGeneratorPersistent;
 import top.continew.utils.CommonUtil;
 import top.continew.utils.DataSourceUtils;
+import top.continew.utils.NotificationUtil;
 import top.continew.utils.PluginIconsUtils;
 
 /**
@@ -101,6 +102,7 @@ public class TableGenerate extends DialogWrapper {
 		String tableName;
 		String tableComment = "";
 		String className = "";
+		String firstSmallClassName = "";
 		if (selectedItem.toString().indexOf(" - ") > 0) {
 			tableName = selectedItem.toString().split(" - ")[0];
 			tableComment = selectedItem.toString().split(" - ")[1];
@@ -109,7 +111,11 @@ public class TableGenerate extends DialogWrapper {
 		}
 
 		if (StringUtils.isNotBlank(tablePrefix)) {
-			className = tableName.replace(tablePrefix, "");
+			className = CommonUtil.underlineToHump1(tableName.replace(tablePrefix, ""));
+			firstSmallClassName = CommonUtil.underlineToHump(tableName.replace(tablePrefix, ""));
+		} else {
+			className = CommonUtil.underlineToHump1(tableName);
+			firstSmallClassName = CommonUtil.underlineToHump(tableName);
 		}
 
 		Map<String, Object> dataModel = new HashMap<>();
@@ -144,9 +150,9 @@ public class TableGenerate extends DialogWrapper {
 		//API 名称
 		dataModel.put("apiName", "");
 		//类名
-		dataModel.put("className", CommonUtil.underlineToHump1(className));
+		dataModel.put("className", className);
 		//类名前缀
-		dataModel.put("classNamePrefix", CommonUtil.underlineToHump1(className));
+		dataModel.put("classNamePrefix", className);
 		//子包名称
 		dataModel.put("subPackageName", GenerateConstant.doPackageName);
 
@@ -278,11 +284,99 @@ public class TableGenerate extends DialogWrapper {
 
 		String jsonString = JSONObject.toJSONString(dataModel);
 		System.out.println("jsonString = " + jsonString);
+		//生成DO
 		generateFile(cfg, GenerateConstant.doTemplatePath,
 				dataModel,
 				javaPath,
 				packageName + "." + GenerateConstant.doPackageName,
-				CommonUtil.underlineToHump1(className) + ".java");
+				className + "DO.java");
+		//生成Query
+		generateFile(cfg, GenerateConstant.queryTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.queryPackageName,
+				className + "Query.java");
+		//生成Req
+		generateFile(cfg, GenerateConstant.reqTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.reqPackageName,
+				className + "Req.java");
+		//生成Resp
+		generateFile(cfg, GenerateConstant.respTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.respPackageName,
+				className + "Resp.java");
+		//生成DetailResp
+		generateFile(cfg, GenerateConstant.detailRespTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.detailRespPackageName,
+				className + "DetailResp.java");
+		//生成Mapper
+		generateFile(cfg, GenerateConstant.mapperTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.mapperPackageName,
+				className + "Mapper.java");
+
+		//生成MapperXml
+		generateFile(cfg, GenerateConstant.mapperXmlTemplatePath,
+				dataModel,
+				resourcesPath,
+				GenerateConstant.mapperXmlPackageName,
+				className + GenerateConstant.mapperXmlSuffex + "." + GenerateConstant.mapperXmlExtenstion);
+		//生成Service
+		generateFile(cfg, GenerateConstant.serviceTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.servicePackageName,
+				className + "Service.java");
+		//生成ServiceImpl
+		generateFile(cfg, GenerateConstant.serviceImplTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.serviceImplPackageName,
+				className + "ServiceImpl.java");
+		//生成Controller
+		generateFile(cfg, GenerateConstant.controllerTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.controllerPackageName,
+				className + "Controller.java");
+		//前端代码
+		//生成Api
+		generateFile(cfg, GenerateConstant.apiTemplatePath,
+				dataModel,
+				resourcesPath,
+				GenerateConstant.apiPackageName,
+				firstSmallClassName + "." + GenerateConstant.apiExtenstion);
+		//生成Index
+		generateFile(cfg, GenerateConstant.indexTemplatePath,
+				dataModel,
+				resourcesPath,
+				GenerateConstant.indexPackageName,
+				firstSmallClassName + File.separator + "index." + GenerateConstant.indexExtenstion);
+		//生成Modal
+		generateFile(cfg, GenerateConstant.addModelTemplatePath,
+				dataModel,
+				resourcesPath,
+				GenerateConstant.addModelPackageName,
+				firstSmallClassName + File.separator + className + "AddModal." + GenerateConstant.addModelExtenstion);
+		//生成DetailDrawer
+		generateFile(cfg, GenerateConstant.detailDrawerTemplatePath,
+				dataModel,
+				resourcesPath,
+				GenerateConstant.detailDrawerPackageName,
+				firstSmallClassName + File.separator + className + "DetailDrawer." + GenerateConstant.detailDrawerExtenstion);
+		//生成Menu
+		generateFile(cfg, GenerateConstant.menuTemplatePath,
+				dataModel,
+				resourcesPath,
+				GenerateConstant.menuPackageName,
+				className + "Menu." + GenerateConstant.menuExtenstion);
+		NotificationUtil.showInfoNotification(project, "生成成功", "生成成功");
 	}
 
 	private void generateFile(Configuration cfg, String templatePath, Map<String, Object> dataModel, String filePath, String packageName, String fileName) {

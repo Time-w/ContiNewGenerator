@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.service.impl;
 
 import lombok.RequiredArgsConstructor;
 

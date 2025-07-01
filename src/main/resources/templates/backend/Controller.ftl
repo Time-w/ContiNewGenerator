@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.controller;
 
 import top.continew.starter.extension.crud.enums.Api;
 

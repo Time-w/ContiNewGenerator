@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.req;
 
 <#if hasRequiredField>
 import jakarta.validation.constraints.*;

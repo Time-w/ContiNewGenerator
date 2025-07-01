@@ -5,6 +5,8 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import javax.swing.Action;
@@ -67,6 +69,15 @@ public class MainGenerator extends DialogWrapper {
 		cancelButton.setIcon(PluginIconsUtils.testFailed);
 		cancelButton.addActionListener(e -> dispose());
 		nextButton.addActionListener(e -> nextStep(project));
+		tableNameTextField.addActionListener(e -> {
+			if (tableNameTextField.getSelectedItem() != null) {
+				String tableNameSelect = tableNameTextField.getSelectedItem().toString();
+				if (tableNameSelect.indexOf(" - ") > 0) {
+					String tableComment = tableNameSelect.split(" - ")[1];
+					businessNameTextField.setText(tableComment);
+				}
+			}
+		});
 	}
 
 	private void reShow(Project project) {

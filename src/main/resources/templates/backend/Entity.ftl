@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.entity;
 
 import lombok.Data;
 

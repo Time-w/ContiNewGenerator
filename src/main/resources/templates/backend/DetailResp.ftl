@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.resp;
 
 import lombok.Data;
 
@@ -36,6 +36,9 @@ public class ${className} extends BaseDetailResp {
     private static final long serialVersionUID = 1L;
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
+     <#if detailRespExcludeFields?seq_contains(fieldConfig.fieldName)>
+          <#continue>
+     </#if>
 
     /**
      * ${fieldConfig.comment}
