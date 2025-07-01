@@ -132,9 +132,9 @@ public class TableGenerate extends DialogWrapper {
 		dataModel.put("tableComment", tableComment);
 		//模块名称
 		if (moduleSelectItem != null) {
-			dataModel.put("moduleName", moduleSelectItem);
+			dataModel.put("apiModuleName", moduleSelectItem);
 		}else {
-			dataModel.put("moduleName", "");
+			dataModel.put("apiModuleName", "");
 		}
 		//包名
 		dataModel.put("packageName", packageName);
