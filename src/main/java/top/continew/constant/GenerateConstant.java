@@ -55,25 +55,25 @@ public interface GenerateConstant {
 
 	//Api
 	String apiTemplatePath = "frontend/api.ftl";
-	String apiPackageName = "vue/apis";
+	String apiPackageName = "src/apis";
 	String apiExtenstion = ".ts";
 	Boolean apiBackend = false;
 
 	//Index
 	String indexTemplatePath = "frontend/index.ftl";
-	String indexPackageName = "vue/views";
+	String indexPackageName = "src/views";
 	String indexExtenstion = ".vue";
 	Boolean indexBackend = false;
 
 	//Modal
 	String addModelTemplatePath = "frontend/AddModal.ftl";
-	String addModelPackageName = "vue/views";
+	String addModelPackageName = "src/views";
 	String addModelExtenstion = ".vue";
 	Boolean addModelBackend = false;
 
 	//DetailDrawer
 	String detailDrawerTemplatePath = "frontend/DetailDrawer.ftl";
-	String detailDrawerPackageName = "vue/views";
+	String detailDrawerPackageName = "src/views";
 	String detailDrawerExtenstion = ".vue";
 	Boolean detailDrawerBackend = false;
 

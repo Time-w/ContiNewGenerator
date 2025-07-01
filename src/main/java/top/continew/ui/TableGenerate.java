@@ -153,8 +153,6 @@ public class TableGenerate extends DialogWrapper {
 		//生成时间
 		dataModel.put("datetime", DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
 
-		//API 模块名称
-		dataModel.put("apiModuleName", "");
 		//API 名称
 		dataModel.put("apiName", firstSmallClassName);
 		//类名
@@ -365,25 +363,25 @@ public class TableGenerate extends DialogWrapper {
 		generateFile(cfg, GenerateConstant.apiTemplatePath,
 				dataModel,
 				resourcesPath,
-				GenerateConstant.apiPackageName,
+				GenerateConstant.apiPackageName + (moduleSelectItem == null ? "" : File.separator + moduleSelectItem),
 				firstSmallClassName + GenerateConstant.apiExtenstion);
 		//生成Index
 		generateFile(cfg, GenerateConstant.indexTemplatePath,
 				dataModel,
 				resourcesPath,
-				GenerateConstant.indexPackageName,
+				GenerateConstant.indexPackageName + (moduleSelectItem == null ? "" : File.separator + moduleSelectItem),
 				firstSmallClassName + File.separator + "index" + GenerateConstant.indexExtenstion);
 		//生成Modal
 		generateFile(cfg, GenerateConstant.addModelTemplatePath,
 				dataModel,
 				resourcesPath,
-				GenerateConstant.addModelPackageName,
+				GenerateConstant.addModelPackageName + (moduleSelectItem == null ? "" : File.separator + moduleSelectItem),
 				firstSmallClassName + File.separator + className + "AddModal" + GenerateConstant.addModelExtenstion);
 		//生成DetailDrawer
 		generateFile(cfg, GenerateConstant.detailDrawerTemplatePath,
 				dataModel,
 				resourcesPath,
-				GenerateConstant.detailDrawerPackageName,
+				GenerateConstant.detailDrawerPackageName + (moduleSelectItem == null ? "" : File.separator + moduleSelectItem),
 				firstSmallClassName + File.separator + className + "DetailDrawer" + GenerateConstant.detailDrawerExtenstion);
 		//生成Menu
 		generateFile(cfg, GenerateConstant.menuTemplatePath,
