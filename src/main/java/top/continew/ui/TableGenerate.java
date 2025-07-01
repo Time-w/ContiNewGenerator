@@ -4,9 +4,23 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.Version;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
@@ -17,12 +31,17 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tools.ant.util.DateUtils;
 import top.continew.constant.GenerateConstant;
 import top.continew.entity.SqlColumn;
 import top.continew.entity.SysDict;
 import top.continew.enums.FormTypeEnum;
 import top.continew.enums.JavaTypeEnum;
 import top.continew.enums.QueryTypeEnum;
+import top.continew.persistent.ContiNewGeneratorPersistent;
+import top.continew.utils.CommonUtil;
 import top.continew.utils.DataSourceUtils;
 import top.continew.utils.PluginIconsUtils;
 
@@ -61,11 +80,191 @@ public class TableGenerate extends DialogWrapper {
 		generateButton.setIcon(PluginIconsUtils.success);
 		returnButton.setIcon(PluginIconsUtils.sendToTheLeft);
 		returnButton.addActionListener(e -> dispose());
-		generateButton.addActionListener(e -> generateCode());
+		generateButton.addActionListener(e -> generateCode(project, selectedItem));
 	}
 
-	private void generateCode() {
-		// TODO 生成代码
+	private void generateCode(Project project, Object selectedItem) {
+		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
+		String projectPath = instance.getProjectPath();
+		String configPath = instance.getConfigPath();
+		String author = instance.getAuthor();
+		String packageName = instance.getPackageName();
+		String businessName = instance.getBusinessName();
+		boolean isOverride = instance.isOverride();
+		boolean isMysql = instance.isMysql();
+		boolean isPg = instance.isPg();
+		String tablePrefix = instance.getTablePrefix();
+		String version = instance.getVersion();
+		String createDate = instance.getCreateDate();
+		String updateDate = instance.getUpdateDate();
+		String logicalDelete = instance.getLogicalDelete();
+
+		String tableName;
+		String tableComment = "";
+		String className = "";
+		if (selectedItem.toString().indexOf(" - ") > 0) {
+			tableName = selectedItem.toString().split(" - ")[0];
+			tableComment = selectedItem.toString().split(" - ")[1];
+		} else {
+			tableName = selectedItem.toString();
+		}
+
+		if (StringUtils.isNotBlank(tablePrefix)) {
+			className = tableName.replace(tablePrefix, "");
+		}
+
+		Map<String, Object> dataModel = new HashMap<>();
+		//表名称
+		dataModel.put("tableName", tableName);
+		//表注释
+		dataModel.put("tableComment", tableComment);
+		//模块名称
+		dataModel.put("moduleName", "");
+		//包名
+		dataModel.put("packageName", packageName);
+		//业务名
+		dataModel.put("businessName", businessName);
+		//作者
+		dataModel.put("author", author);
+		//表前缀
+		dataModel.put("tablePrefix", tablePrefix);
+		//是否覆盖
+		dataModel.put("isOverride", isOverride);
+		//创建时间
+		dataModel.put("createTime", DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		//修改时间
+		dataModel.put("updateTime", DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		//生成时间
+		dataModel.put("datetime", DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+
+		//API 模块名称
+		dataModel.put("apiModuleName", "");
+		//API 名称
+		dataModel.put("apiName", "");
+		//类名
+		dataModel.put("className", CommonUtil.underlineToHump1(className));
+		//类名前缀
+		dataModel.put("classNamePrefix", tablePrefix);
+		//子包名称
+		dataModel.put("subPackageName", GenerateConstant.doPackageName);
+
+		dataModel.put("hasBigDecimalField", false);
+		dataModel.put("hasTimeField", false);
+		dataModel.put("hasDictField", false);
+		dataModel.put("hasRequiredField", false);
+
+		List<Map<String, Object>> fieldConfigs = new ArrayList<>();
+		dataModel.put("fieldConfigs", fieldConfigs);
+		Map<String, Object> fieldConfig;
+		TableColumnModel columnModel = columnTable.getColumnModel();
+		int rowCount = columnTable.getRowCount();
+		for (int i = 0; i < rowCount; i++) {
+			fieldConfig = new HashMap<>();
+			fieldConfigs.add(fieldConfig);
+			fieldConfig.put("tableName", tableName);
+			fieldConfig.put("columnSize", "");
+			// 遍历列
+			for (int j = 0; j < columnModel.getColumnCount(); j++) {
+				TableColumn column = columnModel.getColumn(j);
+				String columnName = column.getHeaderValue().toString();
+				if (columnName.equals("序号")) {
+					fieldConfig.put("id", columnTable.getValueAt(i, j).toString());
+					fieldConfig.put("fieldSort", columnTable.getValueAt(i, j).toString());
+				}
+				// 列名称
+				if (columnName.equals("列名称")) {
+					fieldConfig.put("columnName", columnTable.getValueAt(i, j).toString());
+				}
+				// 列类型
+				if (columnName.equals("列类型")) {
+					fieldConfig.put("columnType", columnTable.getValueAt(i, j).toString());
+					if (CommonUtil.isDateTimeType(columnTable.getValueAt(i, j).toString()) || CommonUtil.isDateType(columnTable.getValueAt(i, j).toString())) {
+						dataModel.put("hasTimeField", true);
+					}
+				}
+				// 字段名称
+				if (columnName.equals("字段名称")) {
+					fieldConfig.put("fieldName", columnTable.getValueAt(i, j).toString());
+				}
+				// Java类型
+				if (columnName.equals("Java类型")) {
+					fieldConfig.put("fieldType", columnTable.getValueAt(i, j).toString());
+					if (columnTable.getValueAt(i, j).toString().equalsIgnoreCase("BigDecimal")) {
+						dataModel.put("hasBigDecimalField", true);
+					}
+				}
+				// 描述
+				if (columnName.equals("描述")) {
+					fieldConfig.put("comment", columnTable.getValueAt(i, j).toString());
+				}
+				// 必填
+				if (columnName.equals("必填")) {
+					fieldConfig.put("isRequired", columnTable.getValueAt(i, j));
+					if (columnTable.getValueAt(i, j).equals(Boolean.TRUE)) {
+						dataModel.put("hasRequiredField", false);
+					}
+				}
+				// 列表
+				if (columnName.equals("列表")) {
+					fieldConfig.put("showInList", columnTable.getValueAt(i, j));
+				}
+				// 表单
+				if (columnName.equals("表单")) {
+					fieldConfig.put("showInForm", columnTable.getValueAt(i, j));
+				}
+				// 查询
+				if (columnName.equals("查询")) {
+					fieldConfig.put("showInQuery", columnTable.getValueAt(i, j));
+				}
+				// 表单类型
+				if (columnName.equals("表单类型")) {
+					fieldConfig.put("formType", columnTable.getValueAt(i, j).toString());
+				}
+				// 查询方式
+				if (columnName.equals("查询方式")) {
+					fieldConfig.put("queryType", columnTable.getValueAt(i, j).toString());
+				}
+				// 关联字典
+				if (columnName.equals("关联字典")) {
+					fieldConfig.put("dictCode", columnTable.getValueAt(i, j).toString());
+					if (StringUtils.isNotBlank(columnTable.getValueAt(i, j).toString())) {
+						dataModel.put("hasDictField", false);
+					}
+				}
+			}
+		}
+
+		// 使用与依赖相同的版本
+		Configuration cfg = new Configuration(new Version("2.3.28"));
+		// 设置模板所在目录
+		cfg.setClassForTemplateLoading(TableGenerate.class, "/templates");
+		String javaPath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + "java";
+		String resourcesPath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + "resources";
+
+		generateFile(cfg, GenerateConstant.doTemplatePath,
+				dataModel,
+				javaPath,
+				packageName + "." + GenerateConstant.doPackageName,
+				CommonUtil.underlineToHump1(className) + ".java");
+	}
+
+	private void generateFile(Configuration cfg, String templatePath, Map<String, Object> dataModel, String filePath, String packageName, String fileName) {
+		File file = new File(filePath + File.separator + packageName.replace(".", File.separator) + File.separator + fileName);
+		File parentFile = file.getParentFile();
+		if (!parentFile.exists()) {
+			parentFile.mkdirs();
+		}
+		try (Writer out = new OutputStreamWriter(new FileOutputStream(file),
+				StandardCharsets.UTF_8)) {
+			Template template = cfg.getTemplate(templatePath);
+			template.process(dataModel, out);
+			// 输出结果
+			String result = out.toString();
+			System.out.println(result);
+		} catch (IOException | TemplateException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	private void showTable(Project project, VirtualFile vf, Object selectedItem) {

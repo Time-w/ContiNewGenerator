@@ -36,7 +36,7 @@ public class ${className} extends BaseDO {
   <#list fieldConfigs as fieldConfig>
 
     /**
-     * ${fieldConfig.comment}
+     * ${fieldConfig.comment!""}
      */
     private ${fieldConfig.fieldType} ${fieldConfig.fieldName};
   </#list>
