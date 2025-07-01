@@ -56,6 +56,8 @@ dependencies {
         exclude(group = "org.slf4j")
     }
 
+    implementation("cn.hutool:hutool-core:5.8.37")
+
     implementation("com.baomidou:mybatis-plus:3.5.3.1")
 
     implementation("org.apache.commons:commons-lang3:3.12.0")

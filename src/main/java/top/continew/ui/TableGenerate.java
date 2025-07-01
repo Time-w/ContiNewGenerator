@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -148,7 +149,7 @@ public class TableGenerate extends DialogWrapper {
 		//API 模块名称
 		dataModel.put("apiModuleName", "");
 		//API 名称
-		dataModel.put("apiName", "");
+		dataModel.put("apiName", firstSmallClassName);
 		//类名
 		dataModel.put("className", className);
 		//类名前缀
@@ -283,6 +284,7 @@ public class TableGenerate extends DialogWrapper {
 
 		// 使用与依赖相同的版本
 		Configuration cfg = new Configuration(new Version("2.3.28"));
+		cfg.setSharedVariable("statics", BeansWrapper.getDefaultInstance().getStaticModels());
 		// 设置模板所在目录
 		cfg.setClassForTemplateLoading(TableGenerate.class, "/templates");
 		String javaPath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + "java";
