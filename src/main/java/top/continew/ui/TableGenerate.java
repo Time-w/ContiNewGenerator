@@ -70,8 +70,8 @@ public class TableGenerate extends DialogWrapper {
 
 	private void showTable(Project project, VirtualFile vf, Object selectedItem) {
 		columnTable.setDoubleBuffered(true);
-		String tableName = "";
-		Object[][] data = {};
+		String tableName;
+		Object[][] data;
 		if (selectedItem != null) {
 			if (selectedItem.toString().indexOf(" - ") > 0) {
 				tableName = selectedItem.toString().split(" - ")[0];
@@ -168,6 +168,12 @@ public class TableGenerate extends DialogWrapper {
 			columnTable.getTableHeader().repaint();
 			columnTable.setModel(model);
 			columnTable.repaint();
+			columnTable.getColumnModel().getColumn(0).setPreferredWidth(12);
+			columnTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+			columnTable.getColumnModel().getColumn(6).setPreferredWidth(12);
+			columnTable.getColumnModel().getColumn(7).setPreferredWidth(12);
+			columnTable.getColumnModel().getColumn(8).setPreferredWidth(12);
+			columnTable.getColumnModel().getColumn(9).setPreferredWidth(12);
 			// 设置表单类型为下拉框
 			TableColumn javaTypeColumn = columnTable.getColumnModel().getColumn(4);
 			JComboBox<String> javaTypeComboBox = new ComboBox<>(JAVA_TYPE_OPTIONS);
