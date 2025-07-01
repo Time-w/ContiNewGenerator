@@ -74,7 +74,7 @@ public class TableGenerate extends DialogWrapper {
 		};
 	}
 
-	public TableGenerate(Project project, VirtualFile vf, Object selectedItem) {
+	public TableGenerate(Project project, VirtualFile vf, Object selectedItem, Object moduleSelectItem) {
 		super(project);
 		setTitle("ContiNew Generator");
 		setModal(true);
@@ -85,10 +85,10 @@ public class TableGenerate extends DialogWrapper {
 		generateButton.setIcon(PluginIconsUtils.success);
 		returnButton.setIcon(PluginIconsUtils.sendToTheLeft);
 		returnButton.addActionListener(e -> dispose());
-		generateButton.addActionListener(e -> generateCode(project, selectedItem));
+		generateButton.addActionListener(e -> generateCode(project, selectedItem, moduleSelectItem));
 	}
 
-	private void generateCode(Project project, Object selectedItem) {
+	private void generateCode(Project project, Object selectedItem, Object moduleSelectItem) {
 		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
 		String projectPath = instance.getProjectPath();
 		String configPath = instance.getConfigPath();
@@ -128,7 +128,11 @@ public class TableGenerate extends DialogWrapper {
 		//表注释
 		dataModel.put("tableComment", tableComment);
 		//模块名称
-		dataModel.put("moduleName", "");
+		if (moduleSelectItem != null) {
+			dataModel.put("moduleName", moduleSelectItem);
+		}else {
+			dataModel.put("moduleName", "");
+		}
 		//包名
 		dataModel.put("packageName", packageName);
 		//业务名
