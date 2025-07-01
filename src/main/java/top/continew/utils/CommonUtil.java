@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
@@ -156,5 +157,46 @@ public class CommonUtil {
 		} else {
 			return "未知类型：" + type;
 		}
+	}
+
+	public static Boolean isNumberType(String dataType) {
+		return List.of(
+				"int",
+				"tinyint",
+				"smallint",
+				"mediumint",
+				"integer",
+				"bigint",
+				"decimal",
+				"float",
+				"double"
+		).contains(dataType.toLowerCase());
+	}
+
+	public static Boolean isStringType(String dataType) {
+		return List.of(
+				"varchar",
+				"char",
+				"text",
+				"mediumtext",
+				"longtext",
+				"tinytext",
+				"json"
+		).contains(dataType.toLowerCase());
+	}
+
+	public static Boolean isDateType(String dataType) {
+		return Objects.equals("date", dataType.toLowerCase());
+	}
+
+	public static Boolean isBooleanType(String dataType) {
+		return Objects.equals("bit", dataType.toLowerCase());
+	}
+
+	public static Boolean isDateTimeType(String dataType) {
+		return List.of(
+				"datetime",
+				"timestamp"
+		).contains(dataType.toLowerCase());
 	}
 }

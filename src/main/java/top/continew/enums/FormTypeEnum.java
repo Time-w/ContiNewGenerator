@@ -28,67 +28,69 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum FormTypeEnum implements BaseEnum<Integer> {
+	NO(0, "无需设置"),
 
-    /**
-     * 输入框
-     */
-    INPUT(1, "输入框"),
+	/**
+	 * 输入框
+	 */
+	INPUT(1, "输入框"),
 
-    /**
-     * 数字输入框
-     */
-    INPUT_NUMBER(2, "数字输入框"),
+	/**
+	 * 数字输入框
+	 */
+	INPUT_NUMBER(2, "数字输入框"),
 
-    /**
-     * 密码输入框
-     */
-    INPUT_PASSWORD(3, "密码输入框"),
+	/**
+	 * 密码输入框
+	 */
+	INPUT_PASSWORD(3, "密码输入框"),
 
-    /**
-     * 文本域
-     */
-    TEXT_AREA(4, "文本域"),
+	/**
+	 * 文本域
+	 */
+	TEXT_AREA(4, "文本域"),
 
-    /**
-     * 下拉框
-     */
-    SELECT(5, "下拉框"),
+	/**
+	 * 下拉框
+	 */
+	SELECT(5, "下拉框"),
 
-    /**
-     * 单选框
-     */
-    RADIO(6, "单选框"),
+	/**
+	 * 单选框
+	 */
+	RADIO(6, "单选框"),
 
-    /**
-     * 开关
-     */
-    SWITCH(7, "开关"),
+	/**
+	 * 开关
+	 */
+	SWITCH(7, "开关"),
 
-    /**
-     * 复选框
-     */
-    CHECK_BOX(8, "复选框"),
+	/**
+	 * 复选框
+	 */
+	CHECK_BOX(8, "复选框"),
 
-    /**
-     * 树形选择
-     */
-    TREE_SELECT(9, "树选择"),
+	/**
+	 * 树形选择
+	 */
+	TREE_SELECT(9, "树选择"),
 
-    /**
-     * 时间框
-     */
-    TIME(10, "时间框"),
+	/**
+	 * 时间框
+	 */
+	TIME(10, "时间框"),
 
-    /**
-     * 日期框
-     */
-    DATE(11, "日期框"),
+	/**
+	 * 日期框
+	 */
+	DATE(11, "日期框"),
 
-    /**
-     * 时间框
-     */
-    DATE_TIME(12, "日期时间框"),;
+	/**
+	 * 时间框
+	 */
+	DATE_TIME(12, "日期时间框"),
+	;
 
-    private final Integer value;
-    private final String description;
+	private final Integer value;
+	private final String description;
 }

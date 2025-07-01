@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
+import top.continew.constant.GenerateConstant;
 import top.continew.entity.SqlColumn;
 import top.continew.entity.SqlTable;
 
@@ -41,7 +42,7 @@ public class DataSourceUtils {
 
 	public static List<SqlTable> getSqlTables(Project project, VirtualFile vf) {
 		DataSourceUtils.initDataSource(project, vf);
-		String sql = "SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.`TABLES` WHERE TABLE_SCHEMA = ?";
+		String sql = "SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.`TABLES` WHERE TABLE_SCHEMA = ? and TABLE_NAME not in (" + GenerateConstant.excludeTables + ")";
 		ListHandler<SqlTable> handler = new ListHandler<>(SqlTable.class);
 		return DataSourceUtils.executeQuery(sql, handler, DataSourceUtils.getDbName());
 	}

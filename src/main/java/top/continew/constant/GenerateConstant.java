@@ -6,7 +6,7 @@ package top.continew.constant;
  */
 public interface GenerateConstant {
 
-	String excludeTables = "DATABASECHANGELOG,DATABASECHANGELOGLOCK,gen_config,gen_field_config";
+	String excludeTables = "'DATABASECHANGELOG','DATABASECHANGELOGLOCK','gen_config','gen_field_config'";
 
 	String doTemplatePath = "backend/Entity.ftl";
 

@@ -3,8 +3,6 @@ package top.continew.entity;
 import java.io.Serializable;
 import java.math.BigInteger;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import top.continew.utils.CommonUtil;
 
@@ -99,6 +97,36 @@ public class SqlColumn implements Serializable {
 	private String javaType;
 
 	private String javaField;
+
+	private Boolean number;
+
+	private Boolean string;
+
+	private Boolean date;
+
+	private Boolean datetime;
+
+	private Boolean bool;
+
+	public Boolean isBool() {
+		return CommonUtil.isBooleanType(this.dataType);
+	}
+
+	public Boolean isString() {
+		return CommonUtil.isStringType(this.dataType);
+	}
+
+	public Boolean isDate() {
+		return CommonUtil.isDateType(this.dataType);
+	}
+
+	public Boolean isDatetime() {
+		return CommonUtil.isDateTimeType(this.dataType);
+	}
+
+	public Boolean isNumber() {
+		return CommonUtil.isNumberType(this.dataType);
+	}
 
 	public String getJavaType() {
 		return CommonUtil.type2JavaType(this.dataType);
