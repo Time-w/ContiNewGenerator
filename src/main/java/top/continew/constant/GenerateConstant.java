@@ -38,7 +38,7 @@ public interface GenerateConstant {
 	//MapperXml
 	String mapperXmlTemplatePath = "backend/MapperXml.ftl";
 	String mapperXmlPackageName = "mapper";
-	String mapperXmlExtenstion = "xml";
+	String mapperXmlExtenstion = ".xml";
 	String mapperXmlSuffex = "Mapper";
 
 	//Service

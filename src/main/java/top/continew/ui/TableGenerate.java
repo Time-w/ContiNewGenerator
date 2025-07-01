@@ -341,7 +341,7 @@ public class TableGenerate extends DialogWrapper {
 				dataModel,
 				resourcesPath,
 				GenerateConstant.mapperXmlPackageName,
-				className + GenerateConstant.mapperXmlSuffex + "." + GenerateConstant.mapperXmlExtenstion);
+				className + GenerateConstant.mapperXmlSuffex + GenerateConstant.mapperXmlExtenstion);
 		//生成Service
 		generateFile(cfg, GenerateConstant.serviceTemplatePath,
 				dataModel,
@@ -366,31 +366,31 @@ public class TableGenerate extends DialogWrapper {
 				dataModel,
 				resourcesPath,
 				GenerateConstant.apiPackageName,
-				firstSmallClassName + "." + GenerateConstant.apiExtenstion);
+				firstSmallClassName + GenerateConstant.apiExtenstion);
 		//生成Index
 		generateFile(cfg, GenerateConstant.indexTemplatePath,
 				dataModel,
 				resourcesPath,
 				GenerateConstant.indexPackageName,
-				firstSmallClassName + File.separator + "index." + GenerateConstant.indexExtenstion);
+				firstSmallClassName + File.separator + "index" + GenerateConstant.indexExtenstion);
 		//生成Modal
 		generateFile(cfg, GenerateConstant.addModelTemplatePath,
 				dataModel,
 				resourcesPath,
 				GenerateConstant.addModelPackageName,
-				firstSmallClassName + File.separator + className + "AddModal." + GenerateConstant.addModelExtenstion);
+				firstSmallClassName + File.separator + className + "AddModal" + GenerateConstant.addModelExtenstion);
 		//生成DetailDrawer
 		generateFile(cfg, GenerateConstant.detailDrawerTemplatePath,
 				dataModel,
 				resourcesPath,
 				GenerateConstant.detailDrawerPackageName,
-				firstSmallClassName + File.separator + className + "DetailDrawer." + GenerateConstant.detailDrawerExtenstion);
+				firstSmallClassName + File.separator + className + "DetailDrawer" + GenerateConstant.detailDrawerExtenstion);
 		//生成Menu
 		generateFile(cfg, GenerateConstant.menuTemplatePath,
 				dataModel,
 				resourcesPath,
 				GenerateConstant.menuPackageName,
-				className + "Menu." + GenerateConstant.menuExtenstion);
+				className + "Menu" + GenerateConstant.menuExtenstion);
 		NotificationUtil.showInfoNotification(project, "生成成功", "生成成功");
 		this.dispose();
 	}
