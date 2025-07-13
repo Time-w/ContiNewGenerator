@@ -1,5 +1,6 @@
 package top.continew.ui;
 
+import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -54,6 +55,7 @@ public class MainGenerator extends DialogWrapper {
 	private AutoCompleteComboBox moduleComboBox;
 	private JTextField vuePathTextField;
 	private JButton vueSelectPathButton;
+	private JButton selectPackageButton;
 	private JLabel vuePathLabel;
 
 	public MainGenerator(Project project) {
@@ -79,6 +81,19 @@ public class MainGenerator extends DialogWrapper {
 		vueSelectPathButton.setIcon(PluginIcons.vue);
 		vueSelectPathButton.addActionListener(e -> chooseVuePath(project));
 		tableNameTextField.addActionListener(e -> setBsniessNameAndPrefix());
+		selectPackageButton.setIcon(PluginIcons.package1);
+		selectPackageButton.addActionListener(e -> choosePackage(project));
+	}
+
+	private void choosePackage(Project project) {
+		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
+		PackageChooserDialog dialog = new PackageChooserDialog("选择包名", project);
+		dialog.show();
+		if (dialog.isOK()) {
+			String packageName = dialog.getSelectedPackage().getQualifiedName();
+			packageNameTextField.setText(packageName);
+			instance.setPackageName(packageName);
+		}
 	}
 
 	private void setBsniessNameAndPrefix() {

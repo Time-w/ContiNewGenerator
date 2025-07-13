@@ -31,6 +31,8 @@ public class PluginIcons {
 	public static final Icon vue = load("/icons/vue.svg");
 	public static final Icon vue_dark = load("/icons/vue_dark.svg");
 
+	public static final Icon package1 = load("/icons/package1.svg");
+	public static final Icon package1_dark = load("/icons/package1_dark.svg");
 	public static Icon load(String iconPath) {
 		return IconLoader.getIcon(iconPath, PluginIcons.class);
 	}
