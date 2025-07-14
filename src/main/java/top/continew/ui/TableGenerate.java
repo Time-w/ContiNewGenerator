@@ -180,71 +180,68 @@ public class TableGenerate extends DialogWrapper {
 			for (int j = 0; j < columnModel.getColumnCount(); j++) {
 				TableColumn column = columnModel.getColumn(j);
 				String columnName = column.getHeaderValue().toString();
-				if (columnName.equals("序号")) {
+				boolean isStr = false;
+				if (columnName.equals(TableHeaderEnum.INDEX.getDescription())) {
 					fieldConfig.put("id", columnTable.getValueAt(i, j).toString());
 					fieldConfig.put("fieldSort", columnTable.getValueAt(i, j).toString());
+					continue;
 				}
 				// 列名称
-				if (columnName.equals("列名称")) {
+				if (columnName.equals(TableHeaderEnum.COLUMN_NAME.getDescription())) {
 					fieldConfig.put("columnName", columnTable.getValueAt(i, j).toString());
+					continue;
+				}
+				// 字段名称
+				if (columnName.equals(TableHeaderEnum.CODE_NAME.getDescription())) {
+					fieldConfig.put("fieldName", columnTable.getValueAt(i, j).toString());
 				}
 				// 列类型
-				if (columnName.equals("列类型")) {
+				if (columnName.equals(TableHeaderEnum.COLUMN_TYPE.getDescription())) {
 					fieldConfig.put("columnType", columnTable.getValueAt(i, j).toString());
 					if (CommonUtil.isDateTimeType(columnTable.getValueAt(i, j).toString()) || CommonUtil.isDateType(columnTable.getValueAt(i, j).toString())) {
 						dataModel.put("hasTimeField", true);
+						continue;
 					}
 				}
-				// 字段名称
-				if (columnName.equals("字段名称")) {
-					fieldConfig.put("fieldName", columnTable.getValueAt(i, j).toString());
-				}
+
 				// Java类型
-				if (columnName.equals("Java类型")) {
+				if (columnName.equals(TableHeaderEnum.CODE_TYPE.getDescription())) {
 					fieldConfig.put("fieldType", columnTable.getValueAt(i, j).toString());
 					if (columnTable.getValueAt(i, j).toString().equalsIgnoreCase("BigDecimal")) {
 						dataModel.put("hasBigDecimalField", true);
 					}
+					continue;
 				}
 				// 描述
-				if (columnName.equals("描述")) {
+				if (columnName.equals(TableHeaderEnum.DESCRIPTION.getDescription())) {
 					fieldConfig.put("comment", columnTable.getValueAt(i, j).toString());
+					continue;
+				}
+				// 列表
+				if (columnName.equals(TableHeaderEnum.TABLE_LIST.getDescription())) {
+					fieldConfig.put("showInList", columnTable.getValueAt(i, j));
+					continue;
+				}
+				// 表单
+				if (columnName.equals(TableHeaderEnum.TABLE_FORM.getDescription())) {
+					fieldConfig.put("showInForm", columnTable.getValueAt(i, j));
+					continue;
 				}
 				// 必填
-				if (columnName.equals("必填")) {
+				if (columnName.equals(TableHeaderEnum.REQUIRED.getDescription())) {
 					fieldConfig.put("isRequired", columnTable.getValueAt(i, j));
 					if (columnTable.getValueAt(i, j).equals(Boolean.TRUE)) {
 						dataModel.put("hasRequiredField", true);
 					}
-				}
-				// 列表
-				if (columnName.equals("列表")) {
-					fieldConfig.put("showInList", columnTable.getValueAt(i, j));
-				}
-				// 表单
-				if (columnName.equals("表单")) {
-					fieldConfig.put("showInForm", columnTable.getValueAt(i, j));
+					continue;
 				}
 				// 查询
-				if (columnName.equals("查询")) {
+				if (columnName.equals(TableHeaderEnum.QUERY_FIELD.getDescription())) {
 					fieldConfig.put("showInQuery", columnTable.getValueAt(i, j));
-				}
-				// 表单类型
-				if (columnName.equals("表单类型")) {
-					String formType = columnTable.getValueAt(i, j).toString();
-					if (StringUtils.isNotBlank(formType)) {
-						FormTypeEnum typeEnum = FormTypeEnum.getByDes(formType);
-						if (typeEnum != null) {
-							fieldConfig.put("formType", typeEnum.name());
-						} else {
-							fieldConfig.put("formType", "");
-						}
-					} else {
-						fieldConfig.put("formType", "");
-					}
+					continue;
 				}
 				// 查询方式
-				if (columnName.equals("查询方式")) {
+				if (columnName.equals(TableHeaderEnum.QUERY_TYPE.getDescription())) {
 					String queryType = columnTable.getValueAt(i, j).toString();
 					if (StringUtils.isNotBlank(queryType)) {
 						QueryTypeEnum typeEnum = QueryTypeEnum.getByDes(queryType);
@@ -256,9 +253,26 @@ public class TableGenerate extends DialogWrapper {
 					} else {
 						fieldConfig.put("queryType", "");
 					}
+					continue;
 				}
+				// 表单类型
+				if (columnName.equals(TableHeaderEnum.FORM_SHOW_TYPE.getDescription())) {
+					String formType = columnTable.getValueAt(i, j).toString();
+					if (StringUtils.isNotBlank(formType)) {
+						FormTypeEnum typeEnum = FormTypeEnum.getByDes(formType);
+						if (typeEnum != null) {
+							fieldConfig.put("formType", typeEnum.name());
+						} else {
+							fieldConfig.put("formType", "");
+						}
+					} else {
+						fieldConfig.put("formType", "");
+					}
+					continue;
+				}
+
 				// 关联字典
-				if (columnName.equals("关联字典")) {
+				if (columnName.equals(TableHeaderEnum.RELATION_DICT.getDescription())) {
 					String dictName = columnTable.getValueAt(i, j).toString();
 					if (StringUtils.isNotBlank(dictName)) {
 						Object o = dictMap.get(dictName);
@@ -272,12 +286,17 @@ public class TableGenerate extends DialogWrapper {
 					} else {
 						fieldConfig.put("dictCode", "");
 					}
+					continue;
 				}
 				// 长度
-				if (columnName.equals("长度")) {
+				if (columnName.equals(TableHeaderEnum.COLUMN_SIZE.getDescription())) {
 					Object valueAt = columnTable.getValueAt(i, j);
 					if (valueAt != null) {
-						fieldConfig.put("columnSize", Integer.valueOf(valueAt.toString()));
+						try {
+							Integer value = Integer.valueOf(valueAt.toString());
+							fieldConfig.put("columnSize", value);
+						} catch (NumberFormatException ignored) {
+						}
 					}
 				}
 			}
