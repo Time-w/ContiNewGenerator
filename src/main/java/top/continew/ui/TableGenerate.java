@@ -41,6 +41,7 @@ import top.continew.entity.SysDict;
 import top.continew.enums.FormTypeEnum;
 import top.continew.enums.JavaTypeEnum;
 import top.continew.enums.QueryTypeEnum;
+import top.continew.enums.TableHeaderEnum;
 import top.continew.icon.PluginIcons;
 import top.continew.persistent.ContiNewGeneratorPersistent;
 import top.continew.utils.CommonUtil;
@@ -57,7 +58,6 @@ public class TableGenerate extends DialogWrapper {
 	private JTable columnTable;
 	private JButton returnButton;
 	private JButton generateButton;
-	private static final String[] columnList;
 	//{"输入框", "数字输入框", "密码输入框", "文本域", "下拉框","单选框","开关","复选框","树选择","时间框","日期框","日期时间框","图片上传","文件上传","富文本框","地图选择"};
 	private static final String[] FORM_TYPE_OPTIONS = Arrays.stream(FormTypeEnum.values()).map(FormTypeEnum::getDescription).toArray(String[]::new);
 	// {"String", "Integer", "Long","Float","Double","Boolean","BigDecimal","LocalDate","LocalTime","LocalDateTime"};
@@ -65,16 +65,12 @@ public class TableGenerate extends DialogWrapper {
 	// {"等于", "不等于", "大于", "大于等于", "小于", "小于等于", "模糊查询", "范围查询", "包含", "开始于", "结束于"};
 	private static final String[] QUERY_TYPE_OPTIONS = Arrays.stream(QueryTypeEnum.values()).map(QueryTypeEnum::getDescription).toArray(String[]::new);
 
+	private static final String[] COLUMN_LIST = Arrays.stream(TableHeaderEnum.values()).map(TableHeaderEnum::getDescription).toArray(String[]::new);;
+
 	private Map<String, Object> dictMap = new HashMap<>();
 
-	private static final String defaultText = "请选择";
+	private static final String DEFAULT_TEXT = "请选择";
 
-
-	static {
-		columnList = new String[]{
-				"序号", "列名称", "字段名称", "列类型", "Java类型", "描述", "列表", "表单", "必填", "表单类型", "查询", "查询方式", "关联字典", "长度"
-		};
-	}
 
 	public TableGenerate(Project project, VirtualFile vf, Object selectedItem, Object moduleSelectItem) {
 		super(project);
@@ -431,7 +427,7 @@ public class TableGenerate extends DialogWrapper {
 			dictMap = dictNames.stream().collect(Collectors.toMap(SysDict::getName, SysDict::getCode));
 			data = new Object[columns.size()][];
 			for (SqlColumn sqlColumn : columns) {
-				Object[] column = new Object[columnList.length];
+				Object[] column = new Object[COLUMN_LIST.length];
 				//序号
 				column[0] = String.valueOf(sqlColumn.getOrdinalPosition());
 				//名称
@@ -458,99 +454,103 @@ public class TableGenerate extends DialogWrapper {
 				} else {
 					column[8] = Boolean.TRUE;
 				}
-				//表单类型
-				if (Arrays.asList(GenerateConstant.formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[9] = defaultText;
-				} else {
-					if (sqlColumn.isString()) {
-						column[9] = "输入框";
-						} else if (sqlColumn.isDate()) {
-							column[9] = "日期框";
-						} else if (sqlColumn.isDatetime()) {
-							column[9] = "日期时间框";
-						} else if (sqlColumn.isBool()) {
-							column[9] = "开关";
-						} else if (sqlColumn.isNumber()) {
-							column[9] = "数字输入框";
-					} else {
-						column[9] = defaultText;
-					}
-				}
 				//查询
 				if (Arrays.asList(GenerateConstant.queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[10] = Boolean.FALSE;
+					column[9] = Boolean.FALSE;
 				} else {
 					// 数字类型默认支持查询 减少选择项
 					if (sqlColumn.isNumber()) {
-						column[10] = Boolean.TRUE;
+						column[9] = Boolean.TRUE;
 					} else {
-						column[10] = Boolean.FALSE;
+						column[9] = Boolean.FALSE;
 					}
 				}
 				//查询方式
 				if (Arrays.asList(GenerateConstant.queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[11] = defaultText;
+					column[10] = DEFAULT_TEXT;
 				} else {
 					if (sqlColumn.isNumber()) {
-						column[11] = "=";
-					//} else if (sqlColumn.isDate()) {
-					//	column[11] = "BETWEEN";
-					//} else if (sqlColumn.isDatetime()) {
-					//	column[11] = "BETWEEN";
-					//} else if (sqlColumn.isBool()) {
-					//	column[11] = "=";
-					//} else if (sqlColumn.isString()) {
-					//	column[11] = "LIKE '%s%'";
+						column[10] = "=";
+						//} else if (sqlColumn.isDate()) {
+						//	column[10] = "BETWEEN";
+						//} else if (sqlColumn.isDatetime()) {
+						//	column[10] = "BETWEEN";
+						//} else if (sqlColumn.isBool()) {
+						//	column[10] = "=";
+						//} else if (sqlColumn.isString()) {
+						//	column[10] = "LIKE '%s%'";
 					} else {
-						column[11] = defaultText;
+						column[10] = DEFAULT_TEXT;
+					}
+				}
+				//表单类型
+				if (Arrays.asList(GenerateConstant.formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+					column[11] = DEFAULT_TEXT;
+				} else {
+					if (sqlColumn.isString()) {
+						column[11] = "输入框";
+						} else if (sqlColumn.isDate()) {
+							column[11] = "日期框";
+						} else if (sqlColumn.isDatetime()) {
+							column[11] = "日期时间框";
+						} else if (sqlColumn.isBool()) {
+							column[11] = "开关";
+						} else if (sqlColumn.isNumber()) {
+							column[11] = "数字输入框";
+					} else {
+						column[11] = DEFAULT_TEXT;
 					}
 				}
 				//关联字典
-				column[12] = defaultText;
+				column[12] = DEFAULT_TEXT;
 				data[columns.indexOf(sqlColumn)] = column;
 				column[13] = sqlColumn.getCharacterMaximumLength();
 			}
 
 			// 创建表格模型
-			DefaultTableModel model = new DefaultTableModel(data, columnList) {
+			DefaultTableModel model = new DefaultTableModel(data, COLUMN_LIST) {
 				@Override
 				public Class<?> getColumnClass(int columnIndex) {
-					if (columnIndex == 6 || columnIndex == 7 || columnIndex == 8 || columnIndex == 10) {
+					List<Integer> collect = Arrays.stream(TableHeaderEnum.values())
+							.filter(TableHeaderEnum::isCheckbox)
+							.map(TableHeaderEnum::getIndex)
+							.toList();
+					if (collect.contains(columnIndex)) {
+						columnTable.getColumnModel().getColumn(columnIndex).setPreferredWidth(12);
 						return Boolean.class;
 					}
 					return super.getColumnClass(columnIndex);
 				}
 			};
+
 			MyHeaderRenderer headerRenderer = new MyHeaderRenderer();
 			columnTable.getTableHeader().setDefaultRenderer(headerRenderer);
 			MyCellRenderer renderer = new MyCellRenderer();
 			for (int n = 0; n < columnTable.getColumnCount(); n++) {
 				columnTable.getColumnModel().getColumn(n).setCellRenderer(renderer);
 			}
+
 			columnTable.getTableHeader().repaint();
 			columnTable.setModel(model);
 			columnTable.repaint();
-			columnTable.getColumnModel().getColumn(0).setPreferredWidth(12);
+
 			columnTable.getColumnModel().getColumn(5).setPreferredWidth(100);
-			columnTable.getColumnModel().getColumn(6).setPreferredWidth(12);
-			columnTable.getColumnModel().getColumn(7).setPreferredWidth(12);
-			columnTable.getColumnModel().getColumn(8).setPreferredWidth(12);
-			columnTable.getColumnModel().getColumn(10).setPreferredWidth(12);
+
 			// 设置表单类型为下拉框
 			TableColumn javaTypeColumn = columnTable.getColumnModel().getColumn(4);
 			JComboBox<String> javaTypeComboBox = new ComboBox<>(JAVA_TYPE_OPTIONS);
 			javaTypeColumn.setCellEditor(new DefaultCellEditor(javaTypeComboBox));
 
-			TableColumn formTypeColumn = columnTable.getColumnModel().getColumn(9);
-			JComboBox<String> formTypeComboBox = new ComboBox<>(FORM_TYPE_OPTIONS);
-			formTypeColumn.setCellEditor(new DefaultCellEditor(formTypeComboBox));
-
-			TableColumn queryTypeColumn = columnTable.getColumnModel().getColumn(11);
+			TableColumn queryTypeColumn = columnTable.getColumnModel().getColumn(10);
 			JComboBox<String> queryTypeComboBox = new ComboBox<>(QUERY_TYPE_OPTIONS);
 			queryTypeColumn.setCellEditor(new DefaultCellEditor(queryTypeComboBox));
 
+			TableColumn formTypeColumn = columnTable.getColumnModel().getColumn(11);
+			JComboBox<String> formTypeComboBox = new ComboBox<>(FORM_TYPE_OPTIONS);
+			formTypeColumn.setCellEditor(new DefaultCellEditor(formTypeComboBox));
+
 			List<String> collect = dictNames.stream().map(SysDict::getName).collect(Collectors.toList());
-			collect.add(defaultText);
+			collect.add(DEFAULT_TEXT);
 			Collections.reverse(collect);
 			TableColumn dictColumn = columnTable.getColumnModel().getColumn(12);
 			JComboBox<String> dictComboBox = new ComboBox<>(collect.toArray(new String[0]));
