@@ -555,6 +555,7 @@ public class TableGenerate extends DialogWrapper {
 			columnTable.setModel(model);
 			columnTable.repaint();
 			columnTable.setRowHeight(25);
+			columnTable.getColumnModel().getColumn(0).setPreferredWidth(12);
 			columnTable.getColumnModel().getColumn(5).setPreferredWidth(100);
 
 			TableHeaderEnum[] values = TableHeaderEnum.values();
