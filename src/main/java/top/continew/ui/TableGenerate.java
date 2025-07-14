@@ -181,6 +181,7 @@ public class TableGenerate extends DialogWrapper {
 				// 字段名称
 				if (columnName.equals(TableHeaderEnum.CODE_NAME.getDescription())) {
 					fieldConfig.put("fieldName", columnTable.getValueAt(i, j).toString());
+					continue;
 				}
 				// 列类型
 				if (columnName.equals(TableHeaderEnum.COLUMN_TYPE.getDescription())) {
