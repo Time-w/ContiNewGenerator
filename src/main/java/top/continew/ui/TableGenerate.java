@@ -426,7 +426,8 @@ public class TableGenerate extends DialogWrapper {
 			List<SysDict> dictNames = DataSourceUtils.getDictNames(project, vf);
 			dictMap = dictNames.stream().collect(Collectors.toMap(SysDict::getName, SysDict::getCode));
 			data = new Object[columns.size()][];
-			for (SqlColumn sqlColumn : columns) {
+			for (int i = 0; i < columns.size(); i++) {
+				SqlColumn sqlColumn = columns.get(i);
 				Object[] column = new Object[COLUMN_LIST.length];
 				//序号
 				column[0] = String.valueOf(sqlColumn.getOrdinalPosition());
