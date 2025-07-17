@@ -165,7 +165,7 @@ public class MainGenerator extends DialogWrapper {
 		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
 		FileChooseUtils uiComponentFacade = FileChooseUtils.getInstance(project);
 		VirtualFile baseDir = ProjectUtil.guessProjectDir(project);
-		final VirtualFile vf = uiComponentFacade.showSingleFolderSelectionDialog("选择项目路径", baseDir, baseDir);
+		final VirtualFile vf = uiComponentFacade.showSingleFolderSelectionDialog("选择项目路径", baseDir);
 		if (null != vf) {
 			this.projectPathTextField.setText(vf.getPath());
 			this.projectPathTextField.setToolTipText(vf.getPath());
@@ -186,7 +186,7 @@ public class MainGenerator extends DialogWrapper {
 				baseDir = LocalFileSystem.getInstance().findFileByIoFile(parentFile);
 			}
 		}
-		final VirtualFile vf = uiComponentFacade.showSingleFileSelectionDialog("选择配置文件", baseDir, baseDir);
+		final VirtualFile vf = uiComponentFacade.showSingleFileSelectionDialog("选择配置文件", baseDir);
 		if (null != vf) {
 			String path = vf.getPath();
 			this.configFilePathTextField.setText(path);
@@ -208,7 +208,7 @@ public class MainGenerator extends DialogWrapper {
 				baseDir = LocalFileSystem.getInstance().findFileByIoFile(parentFile);
 			}
 		}
-		final VirtualFile vf = uiComponentFacade.showSingleFolderSelectionDialog("选择前端项目路径", baseDir, baseDir);
+		final VirtualFile vf = uiComponentFacade.showSingleFolderSelectionDialog("选择前端项目路径", baseDir);
 		if (null != vf) {
 			String path = vf.getPath();
 			this.vuePathTextField.setText(path);

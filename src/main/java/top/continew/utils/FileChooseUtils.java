@@ -27,27 +27,21 @@ public class FileChooseUtils {
 		return new FileChooseUtils(project);
 	}
 
-	public VirtualFile showSingleFolderSelectionDialog(String title, VirtualFile toSelect, VirtualFile... roots) {
+	public VirtualFile showSingleFolderSelectionDialog(String title, VirtualFile toSelect) {
 		if (title == null) {
 			return null;
 		}
 		FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
 		descriptor.setTitle(title);
-		if (null != roots) {
-			descriptor.setRoots(roots);
-		}
 		return FileChooser.chooseFile(descriptor, this.project, toSelect);
 	}
 
-	public VirtualFile showSingleFileSelectionDialog(String title, VirtualFile toSelect, VirtualFile... roots) {
+	public VirtualFile showSingleFileSelectionDialog(String title, VirtualFile toSelect) {
 		if (title == null) {
 			return null;
 		}
 		FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor();
 		descriptor.setTitle(title);
-		if (null != roots) {
-			descriptor.setRoots(roots);
-		}
 		return FileChooser.chooseFile(descriptor, this.project, toSelect);
 	}
 
