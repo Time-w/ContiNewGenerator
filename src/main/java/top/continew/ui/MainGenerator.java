@@ -80,7 +80,7 @@ public class MainGenerator extends DialogWrapper {
 		//moduleComboBox.setModel(new DefaultComboBoxModel<>(moduleNames));
 		vueSelectPathButton.setIcon(PluginIcons.vue);
 		vueSelectPathButton.addActionListener(e -> chooseVuePath(project));
-		tableNameTextField.addActionListener(e -> setBsniessNameAndPrefix());
+		tableNameTextField.addActionListener(e -> setBusinessNameAndPrefix());
 		selectPackageButton.setIcon(PluginIcons.package1);
 		selectPackageButton.addActionListener(e -> choosePackage(project));
 	}
@@ -96,7 +96,7 @@ public class MainGenerator extends DialogWrapper {
 		}
 	}
 
-	private void setBsniessNameAndPrefix() {
+	private void setBusinessNameAndPrefix() {
 		if (tableNameTextField.getSelectedItem() != null) {
 			String tableNameSelect = tableNameTextField.getSelectedItem().toString();
 			if (tableNameSelect.indexOf(" - ") > 0) {
