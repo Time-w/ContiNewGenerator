@@ -1,5 +1,5 @@
 <template>
-  <div class="gi_table_page">
+  <GiPageLayout>
     <GiTable
       title="${businessName}管理"
       row-key="id"
@@ -102,18 +102,18 @@
 
     <${classNamePrefix}AddModal ref="${classNamePrefix}AddModalRef" @save-success="search" />
     <${classNamePrefix}DetailDrawer ref="${classNamePrefix}DetailDrawerRef" />
-  </div>
+  </GiPageLayout>
 </template>
 
 <script setup lang="ts">
 import type { TableInstance } from '@arco-design/web-vue'
-import ${classNamePrefix}AddModal from './${classNamePrefix}AddModal.vue'
-import ${classNamePrefix}DetailDrawer from './${classNamePrefix}DetailDrawer.vue'
-import { type ${classNamePrefix}Resp, type ${classNamePrefix}Query, delete${classNamePrefix}, export${classNamePrefix}, list${classNamePrefix} } from '@/apis/${apiModuleName}/${apiName}'
-import { useDownload, useTable } from '@/hooks'
-import { useDict } from '@/hooks/app'
-import { isMobile } from '@/utils'
+import ${classNamePrefix}AddModal from './'
+import ${classNamePrefix}DetailDrawer from './'
+import {useDownload, useTable} from '@/hooks'
+import {useDict} from '@/hooks/app'
+import {isMobile} from '@/utils'
 import has from '@/utils/has'
+import { type ${classNamePrefix}Resp, type ${classNamePrefix}Query, delete${classNamePrefix}, export${classNamePrefix}, list${classNamePrefix} } from '@/apis/${apiModuleName}/${apiName}'
 
 defineOptions({ name: '${classNamePrefix}' })
 
