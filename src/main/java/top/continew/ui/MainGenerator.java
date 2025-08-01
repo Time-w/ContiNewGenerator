@@ -91,7 +91,7 @@ public class MainGenerator extends DialogWrapper {
 		List<String> versions = new ArrayList<>();
 		versions.add("3.5.0");
 		versions.add("3.6.0");
-		versions.add("3.7.0-");
+		versions.add("3.7.0");
 		versions.add("4.0.0-多租户");
 		versions.forEach(version -> versionComboBox.addItem(version));
 		versionComboBox.setSelectedIndex(2);
