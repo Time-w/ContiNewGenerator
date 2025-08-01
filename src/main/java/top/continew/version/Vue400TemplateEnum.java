@@ -7,7 +7,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Vue400TemplateEnum implements TemplateEnum {
 
-	api("frontend/api.ftl", "src.api", "api.ts"),
+	api("frontend/api.ftl", "src.api", "%s.ts") {
+		@Override
+		public boolean firstToLowerCase() {
+			return true;
+		}
+	},
 	index("frontend/index.ftl", "src.views", "index.vue"),
 	AddModal("frontend/AddModal.ftl", "src.views", "%sAddModal.vue"),
 	DetailDrawer("frontend/DetailDrawer.ftl", "src.views", "%sDetailDrawer.vue")
@@ -17,4 +22,9 @@ public enum Vue400TemplateEnum implements TemplateEnum {
 	private final String templatePath;
 	private final String packageName;
 	private final String fileName;
+
+	@Override
+	public boolean firstToLowerCase() {
+		return false;
+	}
 }

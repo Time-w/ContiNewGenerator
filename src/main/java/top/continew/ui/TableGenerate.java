@@ -42,11 +42,15 @@ import top.continew.entity.SysDict;
 import top.continew.enums.FormTypeEnum;
 import top.continew.enums.QueryTypeEnum;
 import top.continew.enums.TableHeaderEnum;
+import top.continew.format.IdeaCodeFormatter;
 import top.continew.icon.PluginIcons;
 import top.continew.persistent.ContiNewGeneratorPersistent;
 import top.continew.utils.CommonUtil;
 import top.continew.utils.DataSourceUtils;
 import top.continew.utils.DateUtils;
+import top.continew.version.Common400TemplateEnum;
+import top.continew.version.Java400TemplateEnum;
+import top.continew.version.Vue400TemplateEnum;
 
 /**
  * @author lww
@@ -313,110 +317,73 @@ public class TableGenerate extends DialogWrapper {
 		cfg.setSharedVariable("statics", BeansWrapper.getDefaultInstance().getStaticModels());
 		// 设置模板所在目录
 		cfg.setClassForTemplateLoading(TableGenerate.class, "/templates");
-		String javaPath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + "java";
-		String resourcesPath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + "resources";
 
 		//String jsonString = JSONObject.toJSONString(dataModel);
 		//System.out.println("jsonString = " + jsonString);
+		//java
 		if (StringUtils.isNotBlank(projectPath)) {
-			//生成DO
-			generateFile(cfg, GenerateConstant.doTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.doPackageName,
-					className + "DO.java");
-			//生成Query
-			generateFile(cfg, GenerateConstant.queryTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.queryPackageName,
-					className + "Query.java");
-			//生成Req
-			generateFile(cfg, GenerateConstant.reqTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.reqPackageName,
-					className + "Req.java");
-			//生成Resp
-			generateFile(cfg, GenerateConstant.respTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.respPackageName,
-					className + "Resp.java");
-			//生成DetailResp
-			generateFile(cfg, GenerateConstant.detailRespTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.detailRespPackageName,
-					className + "DetailResp.java");
-			//生成Mapper
-			generateFile(cfg, GenerateConstant.mapperTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.mapperPackageName,
-					className + "Mapper.java");
-
-			//生成MapperXml
-			generateFile(cfg, GenerateConstant.mapperXmlTemplatePath,
-					dataModel,
-					resourcesPath,
-					GenerateConstant.mapperXmlPackageName,
-					className + GenerateConstant.mapperXmlSuffex + GenerateConstant.mapperXmlExtenstion);
-			//生成Service
-			generateFile(cfg, GenerateConstant.serviceTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.servicePackageName,
-					className + "Service.java");
-			//生成ServiceImpl
-			generateFile(cfg, GenerateConstant.serviceImplTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.serviceImplPackageName,
-					className + "ServiceImpl.java");
-			//生成Controller
-			generateFile(cfg, GenerateConstant.controllerTemplatePath,
-					dataModel,
-					javaPath,
-					packageName + "." + GenerateConstant.controllerPackageName,
-					className + "Controller.java");
+			String javaTargetPath =
+					projectPath + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + packageName.replace(".", File.separator);
+			String resourcesPath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + "resources";
+			String finalClassName = className;
+			Arrays.asList(Java400TemplateEnum.values()).forEach(e -> {
+				String fileName = e.getFileName().formatted(finalClassName);
+				if (e.firstToLowerCase()) {
+					fileName = CommonUtil.firstToLowerCase(fileName);
+				}
+				String packageName1 = e.getPackageName().formatted(finalClassName).replace(".", File.separator);
+				String templatePath = e.getTemplatePath();
+				File file = new File(javaTargetPath + File.separator + packageName1 + File.separator + fileName);
+				generateFile(cfg, dataModel, templatePath, file);
+				IdeaCodeFormatter.formatFile(file);
+			});
+			Arrays.asList(Common400TemplateEnum.values()).forEach(e -> {
+				String fileName = e.getFileName().formatted(finalClassName);
+				if (e.firstToLowerCase()) {
+					fileName = CommonUtil.firstToLowerCase(fileName);
+				}
+				String packageName1 = e.getPackageName().formatted(finalClassName).replace(".", File.separator);
+				String templatePath = e.getTemplatePath();
+				File file = new File(resourcesPath + File.separator + packageName1 + File.separator + fileName);
+				generateFile(cfg, dataModel, templatePath, file);
+				IdeaCodeFormatter.formatFile(file);
+			});
 		}
 		if (StringUtils.isNotBlank(vuePath)) {
-			//前端代码
-			//生成Api
-			generateFile(cfg, GenerateConstant.apiTemplatePath,
-					dataModel,
-					vuePath,
-					GenerateConstant.apiPackageName + (moduleSelectItem == null ? "" : File.separator + moduleSelectItem),
-					firstSmallClassName + GenerateConstant.apiExtenstion);
-			//生成Index
-			generateFile(cfg, GenerateConstant.indexTemplatePath,
-					dataModel,
-					vuePath,
-					GenerateConstant.indexPackageName + (moduleSelectItem == null ? "" : File.separator + moduleSelectItem),
-					firstSmallClassName + File.separator + "index" + GenerateConstant.indexExtenstion);
-			//生成Modal
-			generateFile(cfg, GenerateConstant.addModelTemplatePath,
-					dataModel,
-					vuePath,
-					GenerateConstant.addModelPackageName + (moduleSelectItem == null ? "" : File.separator + moduleSelectItem),
-					firstSmallClassName + File.separator + className + "AddModal" + GenerateConstant.addModelExtenstion);
-			//生成DetailDrawer
-			generateFile(cfg, GenerateConstant.detailDrawerTemplatePath,
-					dataModel,
-					vuePath,
-					GenerateConstant.detailDrawerPackageName + (moduleSelectItem == null ? "" : File.separator + moduleSelectItem),
-					firstSmallClassName + File.separator + className + "DetailDrawer" + GenerateConstant.detailDrawerExtenstion);
-			//生成Menu
-			generateFile(cfg, GenerateConstant.menuTemplatePath,
-					dataModel,
-					resourcesPath,
-					GenerateConstant.menuPackageName,
-					className + "Menu" + GenerateConstant.menuExtenstion);
-			//NotificationUtil.showInfoNotification(project, "生成成功", "生成成功");
-			JOptionPane.showMessageDialog(rootPanel, "success", "生成成功!", JOptionPane.INFORMATION_MESSAGE);
+			String finalClassName1 = className;
+			Arrays.asList(Vue400TemplateEnum.values())
+					.forEach(e -> {
+						String fileName = e.getFileName().formatted(finalClassName1);
+						if (e.firstToLowerCase()) {
+							fileName = CommonUtil.firstToLowerCase(fileName);
+						}
+						String packageName1 = e.getPackageName().formatted(finalClassName1).replace(".", File.separator)
+								+ (StringUtils.isNotBlank(moduleSelectItem + "") ? File.separator + moduleSelectItem : "");
+						String templatePath = e.getTemplatePath();
+						File file = new File(vuePath + File.separator + packageName1 + File.separator + fileName);
+						generateFile(cfg, dataModel, templatePath, file);
+						IdeaCodeFormatter.formatFile(file);
+					});
 		}
+		JOptionPane.showMessageDialog(rootPanel, "代码生成成功,快去看看吧!", "生成成功!", JOptionPane.INFORMATION_MESSAGE);
 		this.dispose();
+	}
+
+	private void generateFile(Configuration cfg, Map<String, Object> dataModel, String templatePath, File file) {
+		File parentFile = file.getParentFile();
+		if (!parentFile.exists()) {
+			parentFile.mkdirs();
+		}
+		try (Writer out = new OutputStreamWriter(new FileOutputStream(file),
+				StandardCharsets.UTF_8)) {
+			Template template = cfg.getTemplate(templatePath);
+			template.process(dataModel, out);
+			// 输出结果
+			String result = out.toString();
+			System.out.println(result);
+		} catch (IOException | TemplateException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void generateFile(Configuration cfg, String templatePath, Map<String, Object> dataModel, String filePath, String packageName, String fileName) {

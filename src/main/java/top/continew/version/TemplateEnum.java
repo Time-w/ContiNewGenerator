@@ -7,4 +7,6 @@ public interface TemplateEnum {
 	String getPackageName();
 
 	String getFileName();
+
+	boolean firstToLowerCase();
 }

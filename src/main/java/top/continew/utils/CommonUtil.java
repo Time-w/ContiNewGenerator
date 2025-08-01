@@ -31,7 +31,7 @@ public class CommonUtil {
 	}
 
 	/**
-	 * 下划线转驼峰
+	 * 下划线转驼峰 首字母小写
 	 */
 	public static String underlineToHump(String str) {
 		str = str.toLowerCase();
@@ -56,6 +56,10 @@ public class CommonUtil {
 			str = str.replaceAll("_" + target, target.toUpperCase());
 		}
 		return str.substring(0, 1).toUpperCase() + str.substring(1);
+	}
+
+	public static String firstToLowerCase(String str) {
+		return str.substring(0, 1).toLowerCase() + str.substring(1);
 	}
 
 	/**

@@ -20,4 +20,8 @@ public enum Common400TemplateEnum implements TemplateEnum {
 	private final String packageName;
 	private final String fileName;
 
+	@Override
+	public boolean firstToLowerCase() {
+		return false;
+	}
 }
