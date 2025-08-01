@@ -9,16 +9,17 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public enum Common400TemplateEnum implements TemplateEnum {
+public enum CommonTemplateEnum implements TemplateEnum {
 
-	MapperXml("backend/MapperXml.ftl", "mapper", "%sMapper.xml"),
-	Menu("backend/Menu.ftl", "sql", "%sMenu.sql")
+	MapperXml("backend/MapperXml.ftl", "mapper", "%sMapper.xml", "4.0.0"),
+	Menu("backend/Menu.ftl", "sql", "%sMenu.sql", "4.0.0")
 	//
 	;
 
 	private final String templatePath;
 	private final String packageName;
 	private final String fileName;
+	private final String version;
 
 	@Override
 	public boolean firstToLowerCase() {

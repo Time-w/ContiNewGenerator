@@ -8,5 +8,7 @@ public interface TemplateEnum {
 
 	String getFileName();
 
+	String getVersion();
+
 	boolean firstToLowerCase();
 }

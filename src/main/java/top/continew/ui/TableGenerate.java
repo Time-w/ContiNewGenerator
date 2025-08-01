@@ -48,9 +48,9 @@ import top.continew.persistent.ContiNewGeneratorPersistent;
 import top.continew.utils.CommonUtil;
 import top.continew.utils.DataSourceUtils;
 import top.continew.utils.DateUtils;
-import top.continew.version.Common400TemplateEnum;
-import top.continew.version.Java400TemplateEnum;
-import top.continew.version.Vue400TemplateEnum;
+import top.continew.version.CommonTemplateEnum;
+import top.continew.version.JavaTemplateEnum;
+import top.continew.version.VueTemplateEnum;
 
 /**
  * @author lww
@@ -90,6 +90,7 @@ public class TableGenerate extends DialogWrapper {
 		boolean isMysql = instance.isMysql();
 		boolean isPg = instance.isPg();
 		String tablePrefix = instance.getTablePrefix();
+		String version = instance.getVersion();
 
 		String tableName;
 		String tableComment = "";
@@ -326,7 +327,9 @@ public class TableGenerate extends DialogWrapper {
 					projectPath + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + packageName.replace(".", File.separator);
 			String resourcesPath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + "resources";
 			String finalClassName = className;
-			Arrays.asList(Java400TemplateEnum.values()).forEach(e -> {
+			Arrays.stream(JavaTemplateEnum.values())
+					.filter(e -> e.getVersion().equals(version))
+					.forEach(e -> {
 				String fileName = e.getFileName().formatted(finalClassName);
 				if (e.firstToLowerCase()) {
 					fileName = CommonUtil.firstToLowerCase(fileName);
@@ -335,9 +338,10 @@ public class TableGenerate extends DialogWrapper {
 				String templatePath = e.getTemplatePath();
 				File file = new File(javaTargetPath + File.separator + packageName1 + File.separator + fileName);
 				generateFile(cfg, dataModel, templatePath, file);
-				IdeaCodeFormatter.formatFile(file);
 			});
-			Arrays.asList(Common400TemplateEnum.values()).forEach(e -> {
+			Arrays.stream(CommonTemplateEnum.values())
+					.filter(e -> e.getVersion().equals(version))
+					.forEach(e -> {
 				String fileName = e.getFileName().formatted(finalClassName);
 				if (e.firstToLowerCase()) {
 					fileName = CommonUtil.firstToLowerCase(fileName);
@@ -346,12 +350,12 @@ public class TableGenerate extends DialogWrapper {
 				String templatePath = e.getTemplatePath();
 				File file = new File(resourcesPath + File.separator + packageName1 + File.separator + fileName);
 				generateFile(cfg, dataModel, templatePath, file);
-				IdeaCodeFormatter.formatFile(file);
 			});
 		}
 		if (StringUtils.isNotBlank(vuePath)) {
 			String finalClassName1 = className;
-			Arrays.asList(Vue400TemplateEnum.values())
+			Arrays.stream(VueTemplateEnum.values())
+					.filter(e -> e.getVersion().equals(version))
 					.forEach(e -> {
 						String fileName = e.getFileName().formatted(finalClassName1);
 						if (e.firstToLowerCase()) {
@@ -362,7 +366,6 @@ public class TableGenerate extends DialogWrapper {
 						String templatePath = e.getTemplatePath();
 						File file = new File(vuePath + File.separator + packageName1 + File.separator + fileName);
 						generateFile(cfg, dataModel, templatePath, file);
-						IdeaCodeFormatter.formatFile(file);
 					});
 		}
 		JOptionPane.showMessageDialog(rootPanel, "代码生成成功,快去看看吧!", "生成成功!", JOptionPane.INFORMATION_MESSAGE);
@@ -381,28 +384,10 @@ public class TableGenerate extends DialogWrapper {
 			// 输出结果
 			String result = out.toString();
 			System.out.println(result);
+			IdeaCodeFormatter.formatFile(file);
 		} catch (IOException | TemplateException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private void generateFile(Configuration cfg, String templatePath, Map<String, Object> dataModel, String filePath, String packageName, String fileName) {
-		File file = new File(filePath + File.separator + packageName.replace(".", File.separator) + File.separator + fileName);
-		File parentFile = file.getParentFile();
-		if (!parentFile.exists()) {
-			parentFile.mkdirs();
-		}
-		try (Writer out = new OutputStreamWriter(new FileOutputStream(file),
-				StandardCharsets.UTF_8)) {
-			Template template = cfg.getTemplate(templatePath);
-			template.process(dataModel, out);
-			// 输出结果
-			String result = out.toString();
-			System.out.println(result);
-		} catch (IOException | TemplateException e) {
-			throw new RuntimeException(e);
-		}
-
 	}
 
 	private void showTable(Project project, VirtualFile vf, Object selectedItem) {
