@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.resp;
 
 import lombok.Data;
 
@@ -22,14 +22,16 @@ import java.math.BigDecimal;
  */
 @Data
 @Schema(description = "${businessName}信息")
-public class ${className} extends BaseResp {
+public class ${className}Resp extends BaseResp {
 
     @Serial
     private static final long serialVersionUID = 1L;
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
     <#if fieldConfig.showInList>
-
+	 <#if respExcludeFields?seq_contains(fieldConfig.fieldName)>
+	  <#continue>
+	 </#if>
     /**
      * ${fieldConfig.comment}
      */

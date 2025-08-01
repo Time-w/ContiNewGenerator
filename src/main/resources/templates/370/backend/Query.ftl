@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.query;
 
 import lombok.Data;
 
@@ -28,7 +28,7 @@ import java.math.BigDecimal;
  */
 @Data
 @Schema(description = "${businessName}查询条件")
-public class ${className} implements Serializable {
+public class ${className}Query implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

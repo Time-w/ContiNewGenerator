@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.req;
 
 <#if hasRequiredField>
 import jakarta.validation.constraints.*;
@@ -27,7 +27,7 @@ import java.math.BigDecimal;
  */
 @Data
 @Schema(description = "创建或修改${businessName}参数")
-public class ${className} implements Serializable {
+public class ${className}Req implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -47,7 +47,7 @@ public class ${className} implements Serializable {
     </#if>
     </#if>
     <#if fieldConfig.fieldType = 'String' && fieldConfig.columnSize??>
-    @Length(max = ${fieldConfig.columnSize?c}, message = "${fieldConfig.comment}长度不能超过 {max} 个字符")
+    @Length(max = ${fieldConfig.columnSize?c}, message = "${fieldConfig.comment}长度不能超过 ${fieldConfig.columnSize?c} 个字符")
     </#if>
     private ${fieldConfig.fieldType} ${fieldConfig.fieldName};
     </#if>

@@ -1,4 +1,4 @@
-[Controller.ftl](Controller.ftl)
+[Controller.ftl](400/backend/Controller.ftl)
 
 ```diff
 - package ${packageName}.${subPackageName};
@@ -11,7 +11,7 @@
 ```
 
 
-[DetailResp.ftl](DetailResp.ftl)
+[DetailResp.ftl](400/backend/DetailResp.ftl)
 
 ```diff
 - package ${packageName}.${subPackageName};
@@ -22,7 +22,7 @@
 
 ```
 
-[Entity.ftl](Entity.ftl)
+[Entity.ftl](400/backend/Entity.ftl)
 ```diff
 - package ${packageName}.${subPackageName};
 + package ${packageName}.model.entity;
@@ -39,7 +39,7 @@
 
 ```
 
-[Mapper.ftl](Mapper.ftl)
+[Mapper.ftl](400/backend/Mapper.ftl)
 ```diff
 - package ${packageName}.${subPackageName};
 + package ${packageName}.mapper;
@@ -49,15 +49,15 @@
 
 ```
 
-[MapperXml.ftl](MapperXml.ftl)
+[MapperXml.ftl](400/backend/MapperXml.ftl)
 ```diff
 ```
 
-[Menu.ftl](Menu.ftl)
+[Menu.ftl](400/backend/Menu.ftl)
 ```diff
 ```
 
-[Query.ftl](Query.ftl)
+[Query.ftl](400/backend/Query.ftl)
 ```diff
 - package ${packageName}.${subPackageName};
 + package ${packageName}.model.query;
@@ -67,7 +67,7 @@
 
 ```
 
-[Req.ftl](Req.ftl)
+[Req.ftl](400/backend/Req.ftl)
 ```diff
 - package ${packageName}.${subPackageName};
 + package ${packageName}.model.req;
@@ -81,7 +81,7 @@
 
 ```
 
-[Resp.ftl](Resp.ftl)
+[Resp.ftl](400/backend/Resp.ftl)
 ```diff
 - package ${packageName}.${subPackageName};
 + package ${packageName}.model.resp;
@@ -96,7 +96,7 @@
 
 ```
 
-[Service.ftl](Service.ftl)
+[Service.ftl](400/backend/Service.ftl)
 ```diff
 - package ${packageName}.${subPackageName};
 + package ${packageName}.service;
@@ -106,7 +106,7 @@
 
 ```
 
-[ServiceImpl.ftl](ServiceImpl.ftl)
+[ServiceImpl.ftl](400/backend/ServiceImpl.ftl)
 ```diff
 - package ${packageName}.${subPackageName};
 + package ${packageName}.service.impl;

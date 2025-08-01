@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.model.entity;
 
 import lombok.Data;
 
@@ -28,15 +28,19 @@ import java.math.BigDecimal;
  */
 @Data
 @TableName("${tableName}")
-public class ${className} extends BaseDO {
+public class ${className}DO extends BaseDO {
 
     @Serial
     private static final long serialVersionUID = 1L;
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
 
+   	<#if doExcludeFields?seq_contains(fieldConfig.fieldName)>
+    <#continue>
+	</#if>
+
     /**
-     * ${fieldConfig.comment}
+     * ${fieldConfig.comment!""}
      */
     private ${fieldConfig.fieldType} ${fieldConfig.fieldName};
   </#list>

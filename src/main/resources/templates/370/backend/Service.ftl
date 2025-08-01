@@ -1,4 +1,4 @@
-package ${packageName}.${subPackageName};
+package ${packageName}.service;
 
 import top.continew.starter.extension.crud.service.BaseService;
 import ${packageName}.model.query.${classNamePrefix}Query;
@@ -12,4 +12,4 @@ import ${packageName}.model.resp.${classNamePrefix}Resp;
  * @author ${author}
  * @since ${datetime}
  */
-public interface ${className} extends BaseService<${classNamePrefix}Resp, ${classNamePrefix}DetailResp, ${classNamePrefix}Query, ${classNamePrefix}Req> {}
+public interface ${className}Service extends BaseService<${classNamePrefix}Resp, ${classNamePrefix}DetailResp, ${classNamePrefix}Query, ${classNamePrefix}Req> {}
