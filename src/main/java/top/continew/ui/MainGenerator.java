@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 import top.continew.entity.SqlTable;
+import top.continew.handler.DBTypeEnum;
 import top.continew.icon.PluginIcons;
 import top.continew.persistent.ContiNewGeneratorPersistent;
 import top.continew.utils.DataSourceUtils;
@@ -85,6 +86,14 @@ public class MainGenerator extends DialogWrapper {
 		selectPackageButton.setIcon(PluginIcons.package1);
 		selectPackageButton.addActionListener(e -> choosePackage(project));
 		initVersion();
+		postgresCheckBox.addChangeListener(e -> {
+			DataSourceUtils.setDbName("");
+			DataSourceUtils.setDataSource(null);
+		});
+		mysqlCheckBox.addChangeListener(e -> {
+			DataSourceUtils.setDbName("");
+			DataSourceUtils.setDataSource(null);
+		});
 	}
 
 	private void initVersion() {
@@ -128,6 +137,10 @@ public class MainGenerator extends DialogWrapper {
 		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
 		//回显数据
 		String projectPath = instance.getProjectPath();
+		this.overrideCheckBox.setSelected(instance.isOverride());
+		this.mysqlCheckBox.setSelected(instance.isMysql());
+		this.postgresCheckBox.setSelected(instance.isPg());
+		this.versionComboBox.setSelectedItem(instance.getVersion());
 		if (StringUtils.isNotEmpty(projectPath)) {
 			this.projectPathTextField.setText(projectPath);
 			this.projectPathTextField.setToolTipText(projectPath);
@@ -152,10 +165,6 @@ public class MainGenerator extends DialogWrapper {
 		if (StringUtils.isNotEmpty(packageName)) {
 			this.packageNameTextField.setText(packageName);
 		}
-		this.overrideCheckBox.setSelected(instance.isOverride());
-		this.mysqlCheckBox.setSelected(instance.isMysql());
-		this.postgresCheckBox.setSelected(instance.isPg());
-		this.versionComboBox.setSelectedItem(instance.getVersion());
 	}
 
 	private void nextStep(Project project) {
@@ -256,7 +265,16 @@ public class MainGenerator extends DialogWrapper {
 	}
 
 	private void fillTableSelect(Project project, VirtualFile vf) {
-		List<SqlTable> sqlTables = DataSourceUtils.getSqlTables(project, vf);
+		DBTypeEnum dbTypeEnum;
+		if (mysqlCheckBox.isSelected()) {
+			dbTypeEnum = DBTypeEnum.MySQL;
+		} else if (postgresCheckBox.isSelected()) {
+			dbTypeEnum = DBTypeEnum.MySQL;
+			//dbTypeEnum = DBTypeEnum.PostgreSQL;
+		}else {
+			dbTypeEnum = DBTypeEnum.MySQL;
+		}
+		List<SqlTable> sqlTables = dbTypeEnum.getHandler().getSqlTables(project, vf);
 		if (sqlTables == null) {
 			NotificationUtil.showWarningNotification(project, "查询表失败", "查询表失败结果为空");
 			return;

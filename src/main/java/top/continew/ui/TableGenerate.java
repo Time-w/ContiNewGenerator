@@ -43,10 +43,10 @@ import top.continew.enums.FormTypeEnum;
 import top.continew.enums.QueryTypeEnum;
 import top.continew.enums.TableHeaderEnum;
 import top.continew.format.IdeaCodeFormatter;
+import top.continew.handler.DBTypeEnum;
 import top.continew.icon.PluginIcons;
 import top.continew.persistent.ContiNewGeneratorPersistent;
 import top.continew.utils.CommonUtil;
-import top.continew.utils.DataSourceUtils;
 import top.continew.utils.DateUtils;
 import top.continew.version.CommonTemplateEnum;
 import top.continew.version.JavaTemplateEnum;
@@ -402,6 +402,15 @@ public class TableGenerate extends DialogWrapper {
 	}
 
 	private void showTable(Project project, VirtualFile vf, Object selectedItem) {
+		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
+		DBTypeEnum dbTypeEnum;
+		if (instance.isMysql()) {
+			dbTypeEnum = DBTypeEnum.MySQL;
+		} else if (instance.isPg()) {
+			dbTypeEnum = DBTypeEnum.PostgreSQL;
+		}else {
+			dbTypeEnum = DBTypeEnum.MySQL;
+		}
 		columnTable.setDoubleBuffered(true);
 		String tableName;
 		Object[][] data;
@@ -411,8 +420,8 @@ public class TableGenerate extends DialogWrapper {
 			} else {
 				tableName = selectedItem.toString();
 			}
-			List<SqlColumn> columns = DataSourceUtils.getSqlTablesColumns(project, vf, tableName);
-			List<SysDict> dictNames = DataSourceUtils.getDictNames(project, vf);
+			List<SqlColumn> columns = dbTypeEnum.getHandler().getSqlTablesColumns(project, vf, tableName);
+			List<SysDict> dictNames = dbTypeEnum.getHandler().getDictNames(project, vf);
 			dictMap = dictNames.stream().collect(Collectors.toMap(SysDict::getName, SysDict::getCode));
 			data = new Object[columns.size()][];
 			for (int i = 0; i < columns.size(); i++) {
