@@ -53,6 +53,50 @@ public class DataSourceUtils {
 		}
 	}
 
+	public static DBTypeEnum getDbType(Project project, VirtualFile vf) {
+		List<Map<String, Object>> docsList = new ArrayList<>();
+		try (InputStream inputStream = vf.getInputStream()) {
+			Yaml yaml = new Yaml();
+			Iterable<Object> docs = yaml.loadAll(inputStream);
+			for (Object doc : docs) {
+				if (doc instanceof Map) {
+					docsList.add((Map<String, Object>) doc);
+				}
+			}
+			String url;
+			Optional<Map<String, Object>> first = docsList.stream().filter(dl -> dl.get("spring") != null).findFirst();
+			if (first.isPresent()) {
+				Map<String, Object> spring = (Map<String, Object>) first.get().get("spring");
+				Map<String, Object> datasource = (Map<String, Object>) spring.get("datasource");
+				if (datasource != null) {
+					url = (String) datasource.get("url");
+				} else {
+					NotificationUtil.showErrorNotification(project, "未找到数据源配置", "未找到数据源配置");
+					return null;
+				}
+			} else {
+				first = docsList.stream().filter(dl -> dl.get("spring.datasource") != null).findFirst();
+				if (first.isPresent()) {
+					Map<String, Object> datasource = (Map<String, Object>) first.get().get("spring.datasource");
+					url = (String) datasource.get("url");
+				} else {
+					NotificationUtil.showErrorNotification(project, "未找到数据源配置", "未找到数据源配置");
+					return null;
+				}
+			}
+			if (url.contains("mysql")) {
+				return DBTypeEnum.MySQL;
+			}else if (url.contains("postgresql")) {
+				return DBTypeEnum.PostgreSQL;
+			}else {
+				NotificationUtil.showErrorNotification(project, "不支持的数据库类型", "不支持的数据库类型");
+			}
+		} catch (Exception e) {
+			NotificationUtil.showErrorNotification(project, "未找到数据源配置", "未找到数据源配置");
+		}
+		return null;
+	}
+
 	/**
 	 * 执行查询操作
 	 *

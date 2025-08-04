@@ -37,23 +37,24 @@ public class PostgreSQLHandler implements QueryHandler {
 	@Override
 	public List<SqlTable> getSqlTables(Project project, VirtualFile vf) {
 		initDataSource(project, vf);
-		String sql = "SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.`TABLES` WHERE TABLE_SCHEMA = ? and TABLE_NAME not in (" + GenerateConstant.excludeTables + ")";
+		String sql = "SELECT tablename AS TABLE_NAME, obj_description(relfilenode, 'pg_class') AS TABLE_COMMENT FROM pg_tables t JOIN pg_class c ON t.tablename = c.relname "
+				+ "WHERE schemaname = 'public' and t.tablename not in (" + GenerateConstant.excludeTables + ")";
 		ListHandler<SqlTable> handler = new ListHandler<>(SqlTable.class);
-		return DataSourceUtils.executeQuery(sql, handler, DataSourceUtils.getDbName());
+		return DataSourceUtils.executeQuery(sql, handler);
 	}
 
 	@Override
 	public List<SqlColumn> getSqlTablesColumns(Project project, VirtualFile vf, String tableName) {
 		initDataSource(project, vf);
-		String sql = "SELECT * FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA = ? AND table_name = ? ORDER BY ORDINAL_POSITION";
+		String sql = "SELECT a.attname AS COLUMN_NAME, a.attnum AS ORDINAL_POSITION, pg_get_expr(ad.adbin, ad.adrelid) AS COLUMN_DEFAULT, CASE WHEN a.attnotnull THEN 'NO' ELSE 'YES' END AS IS_NULLABLE, t.typname AS DATA_TYPE, '' AS COLUMN_TYPE, a.attlen AS CHARACTER_MAXIMUM_LENGTH, CASE WHEN ct.contype = 'p' THEN 'PRI' ELSE '' END AS COLUMN_KEY, col_description(a.attrelid, a.attnum) AS COLUMN_COMMENT FROM pg_attribute a LEFT JOIN pg_type t ON a.atttypid = t.oid LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum LEFT JOIN pg_constraint ct ON ct.conrelid = a.attrelid AND a.attnum = ANY(ct.conkey) AND ct.contype = 'p' WHERE a.attrelid = (SELECT oid FROM pg_class WHERE relname = ?) AND a.attnum > 0 AND NOT a.attisdropped ORDER BY a.attnum";
 		ListHandler<SqlColumn> handler = new ListHandler<>(SqlColumn.class);
-		return DataSourceUtils.executeQuery(sql, handler, DataSourceUtils.getDbName(), tableName);
+		return DataSourceUtils.executeQuery(sql, handler, tableName);
 	}
 
 	@Override
 	public List<SysDict> getDictNames(Project project, VirtualFile vf) {
 		initDataSource(project, vf);
-		String sql = "select `name`,`code` from sys_dict";
+		String sql = "select name,code from sys_dict";
 		ListHandler<SysDict> handler = new ListHandler<>(SysDict.class);
 		return DataSourceUtils.executeQuery(sql, handler);
 	}

@@ -55,7 +55,7 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.0.1"){
         exclude(group = "org.slf4j")
     }
-    implementation("org.postgresql:postgresql:42.7.7")
+    implementation("org.postgresql:postgresql:42.7.5")
 
     implementation("cn.hutool:hutool-core:5.8.37")
 

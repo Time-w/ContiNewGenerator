@@ -87,8 +87,7 @@ public class TableGenerate extends DialogWrapper {
 		String packageName = instance.getPackageName();
 		String businessName = instance.getBusinessName();
 		boolean isOverride = instance.isOverride();
-		boolean isMySQL = instance.isMysql();
-		boolean isPostgreSQL = instance.isPg();
+		String dbType = instance.getDbType();
 		String tablePrefix = instance.getTablePrefix();
 		String version = instance.getVersion();
 
@@ -114,8 +113,7 @@ public class TableGenerate extends DialogWrapper {
 		Map<String, Object> dataModel = new HashMap<>();
 
 		List<Object> dictCodes = new ArrayList<>();
-		dataModel.put("isMySQL", isMySQL);
-		dataModel.put("isPostgreSQL", isPostgreSQL);
+		dataModel.put("dbType", dbType);
 		dataModel.put("dictCodes", dictCodes);
 		//表名称
 		dataModel.put("tableName", tableName);
@@ -403,14 +401,7 @@ public class TableGenerate extends DialogWrapper {
 
 	private void showTable(Project project, VirtualFile vf, Object selectedItem) {
 		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
-		DBTypeEnum dbTypeEnum;
-		if (instance.isMysql()) {
-			dbTypeEnum = DBTypeEnum.MySQL;
-		} else if (instance.isPg()) {
-			dbTypeEnum = DBTypeEnum.PostgreSQL;
-		}else {
-			dbTypeEnum = DBTypeEnum.MySQL;
-		}
+		DBTypeEnum dbTypeEnum = DBTypeEnum.valueOf(instance.getDbType());
 		columnTable.setDoubleBuffered(true);
 		String tableName;
 		Object[][] data;

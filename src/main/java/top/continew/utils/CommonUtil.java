@@ -123,6 +123,9 @@ public class CommonUtil {
 	}
 
 	public static String type2JavaType(String type) {
+		if (Objects.isNull(type)) {
+			return "未知类型";
+		}
 		if (List.of(
 				"int",
 				"tinyint",

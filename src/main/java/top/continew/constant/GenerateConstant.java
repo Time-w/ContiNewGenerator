@@ -18,7 +18,7 @@ public interface GenerateConstant {
 	String[] COLUMN_LIST = Arrays.stream(TableHeaderEnum.values()).map(TableHeaderEnum::getDescription).toArray(String[]::new);
 	String DEFAULT_TEXT = "请选择";
 
-	String excludeTables = "'DATABASECHANGELOG','DATABASECHANGELOGLOCK','gen_config','gen_field_config'";
+	String excludeTables = "'databasechangelog','databasechangeloglock','gen_config','gen_field_config'";
 
 	//DO
 	String doTemplatePath = "backend/Entity.ftl";

@@ -49,8 +49,6 @@ public class MainGenerator extends DialogWrapper {
 	private JButton configFilePathButton;
 	private JLabel configFilePathLabel;
 	private JCheckBox overrideCheckBox;
-	private JCheckBox mysqlCheckBox;
-	private JCheckBox postgresCheckBox;
 	private JTextField businessNameTextField;
 	private JLabel businessNameLabel;
 	private AutoCompleteComboBox moduleComboBox;
@@ -86,14 +84,6 @@ public class MainGenerator extends DialogWrapper {
 		selectPackageButton.setIcon(PluginIcons.package1);
 		selectPackageButton.addActionListener(e -> choosePackage(project));
 		initVersion();
-		postgresCheckBox.addChangeListener(e -> {
-			DataSourceUtils.setDbName("");
-			DataSourceUtils.setDataSource(null);
-		});
-		mysqlCheckBox.addChangeListener(e -> {
-			DataSourceUtils.setDbName("");
-			DataSourceUtils.setDataSource(null);
-		});
 	}
 
 	private void initVersion() {
@@ -138,8 +128,6 @@ public class MainGenerator extends DialogWrapper {
 		//回显数据
 		String projectPath = instance.getProjectPath();
 		this.overrideCheckBox.setSelected(instance.isOverride());
-		this.mysqlCheckBox.setSelected(instance.isMysql());
-		this.postgresCheckBox.setSelected(instance.isPg());
 		this.versionComboBox.setSelectedItem(instance.getVersion());
 		if (StringUtils.isNotEmpty(projectPath)) {
 			this.projectPathTextField.setText(projectPath);
@@ -155,6 +143,8 @@ public class MainGenerator extends DialogWrapper {
 		if (StringUtils.isNotEmpty(configPath)) {
 			this.configFilePathTextField.setText(configPath);
 			configFilePathTextField.setToolTipText(configPath);
+			DataSourceUtils.setDataSource(null);
+			DataSourceUtils.setDbName(null);
 			fillTableSelect(project, LocalFileSystem.getInstance().findFileByIoFile(new File(configPath)));
 		}
 		String author = instance.getAuthor();
@@ -176,8 +166,6 @@ public class MainGenerator extends DialogWrapper {
 		instance.setPackageName(packageNameTextField.getText());
 		instance.setBusinessName(businessNameTextField.getText());
 		instance.setOverride(overrideCheckBox.isSelected());
-		instance.setMysql(mysqlCheckBox.isSelected());
-		instance.setPg(postgresCheckBox.isSelected());
 		instance.setVersion(versionComboBox.getSelectedItem().toString());
 		instance.setTablePrefix(tablePrefixTextField.getText());
 		TableGenerate tableGenerate = new TableGenerate(project, LocalFileSystem.getInstance().findFileByIoFile(new File(this.configFilePathTextField.getText())),
@@ -265,15 +253,12 @@ public class MainGenerator extends DialogWrapper {
 	}
 
 	private void fillTableSelect(Project project, VirtualFile vf) {
-		DBTypeEnum dbTypeEnum;
-		if (mysqlCheckBox.isSelected()) {
-			dbTypeEnum = DBTypeEnum.MySQL;
-		} else if (postgresCheckBox.isSelected()) {
-			dbTypeEnum = DBTypeEnum.MySQL;
-			//dbTypeEnum = DBTypeEnum.PostgreSQL;
-		}else {
-			dbTypeEnum = DBTypeEnum.MySQL;
+		DBTypeEnum dbTypeEnum = DataSourceUtils.getDbType(project, vf);
+		if (dbTypeEnum == null) {
+			return;
 		}
+		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
+		instance.setDbType(dbTypeEnum.name());
 		List<SqlTable> sqlTables = dbTypeEnum.getHandler().getSqlTables(project, vf);
 		if (sqlTables == null) {
 			NotificationUtil.showWarningNotification(project, "查询表失败", "查询表失败结果为空");

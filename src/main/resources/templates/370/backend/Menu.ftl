@@ -1,4 +1,4 @@
-<#if isMySQL>
+<#if dbType == "MySQL">
 SET @parentId = ${statics["cn.hutool.core.util.IdUtil"].getSnowflakeNextId()?c};
 -- ${businessName}管理菜单
 INSERT INTO `sys_menu`
@@ -18,7 +18,7 @@ VALUES
     (${statics["cn.hutool.core.util.IdUtil"].getSnowflakeNextId()?c}, '导出', @parentId, 3, '${apiModuleName}:${apiName}:export', 6, 1, 1, NOW());
 </#if>
 
-<#if isPostgreSQL>
+<#if dbType == "PostgreSQL">
 DECLARE sys_menu_id_seq INT8 := ${statics["cn.hutool.core.util.IdUtil"].getSnowflakeNextId()?c};
 
 -- ${businessName}管理菜单
