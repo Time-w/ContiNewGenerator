@@ -5,10 +5,10 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.Version;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -314,8 +314,9 @@ public class TableGenerate extends DialogWrapper {
 		}
 
 		// 使用与依赖相同的版本
-		Configuration cfg = new Configuration(new Version("2.3.28"));
-		cfg.setSharedVariable("statics", BeansWrapper.getDefaultInstance().getStaticModels());
+		Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+		BeansWrapper build = new BeansWrapperBuilder(Configuration.VERSION_2_3_28).build();
+		cfg.setSharedVariable("statics", build.getStaticModels());
 		// 设置模板所在目录
 		cfg.setClassForTemplateLoading(TableGenerate.class, "/templates");
 
