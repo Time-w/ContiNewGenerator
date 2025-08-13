@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum VueTemplateEnum implements TemplateEnum {
 
-	api400("400/frontend/api.ftl", "src.api", "%s.ts", "4.0.0") {
+	api400("400/frontend/api.ftl", "src.apis", "%s.ts", "4.0.0") {
 		@Override
 		public boolean firstToLowerCase() {
 			return true;
@@ -22,7 +22,7 @@ public enum VueTemplateEnum implements TemplateEnum {
 	AddModal400("400/frontend/AddModal.ftl", "src.views", "%sAddModal.vue", "4.0.0"),
 	DetailDrawer400("400/frontend/DetailDrawer.ftl", "src.views", "%sDetailDrawer.vue", "4.0.0"),
 
-	api370("370/frontend/api.ftl", "src.api", "%s.ts", "3.7.0") {
+	api370("370/frontend/api.ftl", "src.apis", "%s.ts", "3.7.0") {
 		@Override
 		public boolean firstToLowerCase() {
 			return true;
@@ -37,7 +37,7 @@ public enum VueTemplateEnum implements TemplateEnum {
 	AddModal370("370/frontend/AddModal.ftl", "src.views", "%sAddModal.vue", "3.7.0"),
 	DetailDrawer370("370/frontend/DetailDrawer.ftl", "src.views", "%sDetailDrawer.vue", "3.7.0"),
 
-	api360("360/frontend/api.ftl", "src.api", "%s.ts", "3.6.0") {
+	api360("360/frontend/api.ftl", "src.apis", "%s.ts", "3.6.0") {
 		@Override
 		public boolean firstToLowerCase() {
 			return true;
@@ -52,7 +52,7 @@ public enum VueTemplateEnum implements TemplateEnum {
 	AddModal360("360/frontend/AddModal.ftl", "src.views", "%sAddModal.vue", "3.6.0"),
 	DetailDrawer360("360/frontend/DetailDrawer.ftl", "src.views", "%sDetailDrawer.vue", "3.6.0"),
 
-	api350("350/frontend/api.ftl", "src.api", "%s.ts", "3.5.0") {
+	api350("350/frontend/api.ftl", "src.apis", "%s.ts", "3.5.0") {
 		@Override
 		public boolean firstToLowerCase() {
 			return true;
