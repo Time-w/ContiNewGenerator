@@ -57,4 +57,16 @@ public class ${className}Req implements Serializable {
     </#if>
   </#list>
 </#if>
+
+	public static ${className}DO convertToDO(${className}Req ${apiName}Req) {
+		${className}DO ${apiName}DO = new ${className}DO();
+		<#if fieldConfigs??>
+		  <#list fieldConfigs as fieldConfig>
+			<#if fieldConfig.showInForm>
+		${apiName}DO.set${fieldConfig.fieldName?cap_first}(${apiName}Req.get${fieldConfig.fieldName?cap_first}());
+			</#if>
+		  </#list>
+		</#if>
+		return ${apiName}DO;
+	}
 }
