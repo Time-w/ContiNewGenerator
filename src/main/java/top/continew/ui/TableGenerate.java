@@ -404,7 +404,7 @@ public class TableGenerate extends DialogWrapper {
 		String packageName = instance.getPackageName();
 		boolean isOverride = instance.isOverride();
 		String version = instance.getVersion();
-		String className = dataModel.get("ClassName") + "";
+		String className = dataModel.get("className") + "";
 		// 使用与依赖相同的版本
 		Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
 		BeansWrapper build = new BeansWrapperBuilder(Configuration.VERSION_2_3_28).build();
