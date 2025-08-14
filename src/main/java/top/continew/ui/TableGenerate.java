@@ -87,6 +87,7 @@ public class TableGenerate extends DialogWrapper {
 		returnButton.setIcon(PluginIcons.sendToTheLeft);
 		returnButton.addActionListener(e -> dispose());
 		generateButton.addActionListener(e -> generateCode(project, selectedItem, moduleSelectItem));
+		previewButton.setIcon(PluginIcons.showLogs);
 		previewButton.addActionListener(e -> previewCode(project, selectedItem, moduleSelectItem));
 	}
 

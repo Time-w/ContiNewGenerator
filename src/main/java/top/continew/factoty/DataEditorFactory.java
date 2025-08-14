@@ -38,20 +38,20 @@ public class DataEditorFactory {
 		Document doc = PsiDocumentManager.getInstance(project).getDocument(sourceFile);
 
 		assert doc != null;
+		// 创建编辑器 true 仅用于预览 false 用于编辑
 		Editor editor = EditorFactory.getInstance().createEditor(doc, project, sourceVirtualFile, false, EditorKind.MAIN_EDITOR);
-
 		EditorSettings editorSettings = editor.getSettings();
 		// 行号显示
 		editorSettings.setLineNumbersShown(true);
 		// 设置显示的缩进导轨
 		editorSettings.setIndentGuidesShown(true);
 		// 折叠块显示
-		editorSettings.setFoldingOutlineShown(true);
+		editorSettings.setFoldingOutlineShown(false);
 		// 折叠块、行号所展示的区域
 		editorSettings.setLineMarkerAreaShown(false);
 		// 显示设置插入符行（光标选中行会变黄）
 		editorSettings.setCaretRowShown(true);
-		//禁用编辑器中的错误条纹
+		// 禁用编辑器中的错误条纹
 		ErrorStripeEditorCustomization.DISABLED.customize((EditorEx) editor);
 		//禁用编辑器中的拼写检查功能
 		Objects.requireNonNull(SpellCheckingEditorCustomizationProvider.getInstance().getDisabledCustomization()).customize((EditorEx) editor);
