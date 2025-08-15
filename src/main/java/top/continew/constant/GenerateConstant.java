@@ -36,12 +36,12 @@ public interface GenerateConstant {
 	//Resp
 	String respTemplatePath = "backend/Resp.ftl";
 	String respPackageName = "model.resp";
-	String respExcludeFields = "id,createUser,createTime";
+	String respExcludeFields = "id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
 
 	//DetailResp
 	String detailRespTemplatePath = "backend/DetailResp.ftl";
 	String detailRespPackageName = "model.resp";
-	String detailRespExcludeFields = "id,createUser,createTime,updateUser,updateTime";
+	String detailRespExcludeFields = "id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
 
 	//Mapper
 	String mapperTemplatePath = "backend/Mapper.ftl";
@@ -95,8 +95,9 @@ public interface GenerateConstant {
 	String menuExtenstion = ".sql";
 	Boolean menuBackend = true;
 
-	String formExcludeFields = "id,createUser,createTime,updateUser,updateTime";
-	String requiredExcludeFields = "id,createUser,createTime,updateUser,updateTime,description";
-	String queryExcludeFields = "createUser,createTime,updateUser,updateTime,description";
+	String resExcludeFields = "deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
+	String formExcludeFields = "createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
+	String requiredExcludeFields = "id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
+	String queryExcludeFields = "createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
 
 }

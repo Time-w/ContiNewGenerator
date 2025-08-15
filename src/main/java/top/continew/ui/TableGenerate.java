@@ -524,7 +524,11 @@ public class TableGenerate extends DialogWrapper {
 				//描述
 				column[5] = sqlColumn.getColumnComment();
 				//列表
-				column[6] = Boolean.TRUE; // 设置为CheckBox
+				if (Arrays.asList(GenerateConstant.resExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+					column[6] = Boolean.FALSE; // 设置为CheckBox
+				} else {
+					column[6] = Boolean.TRUE;
+				}
 				//表单
 				if (Arrays.asList(GenerateConstant.formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
 					column[7] = Boolean.FALSE;
