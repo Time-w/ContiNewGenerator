@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import top.continew.config.ContiNewConfigPersistent;
 import top.continew.factoty.DataEditorFactory;
 import top.continew.version.TemplateEnum;
 
@@ -32,6 +33,8 @@ public class PreviewUI extends DialogWrapper {
 		setTitle("预览");
 		setModal(false);
 		setResizable(false);
+		ContiNewConfigPersistent configPersistent = ContiNewConfigPersistent.getInstance();
+		boolean hightLight = configPersistent.getHightLight();
 		DefaultListModel<TemplateEnum> listModel = new DefaultListModel<>();
 		files.forEach(listModel::addElement);
 		fileList.setModel(listModel);
@@ -40,7 +43,12 @@ public class PreviewUI extends DialogWrapper {
 		TemplateEnum templateEnum = files.get(0);
 		String previewCodeString = TableGenerate.previewCodeString(dataModel, templateEnum);
 		DataEditorFactory dataEditorFactory = new DataEditorFactory(project);
-		Editor editor = dataEditorFactory.createEditor(templateEnum.getFileName().formatted(dataModel.get("className") + ""), previewCodeString);
+		Editor editor;
+		if (hightLight) {
+			editor = dataEditorFactory.createEditor(templateEnum.getFileName().formatted(dataModel.get("className") + ""), previewCodeString);
+		} else {
+			editor = dataEditorFactory.createEditor("temp.txt", previewCodeString);
+		}
 		currentEditor = editor; // 保存Editor引用
 		textPanel.add(editor.getComponent(), BorderLayout.CENTER);
 		this.setSize(1200, 800);
@@ -55,10 +63,17 @@ public class PreviewUI extends DialogWrapper {
 		cancelButton.addActionListener(e -> dispose());
 		fileList.addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting()) {
+				ContiNewConfigPersistent configPersistent1 = ContiNewConfigPersistent.getInstance();
+				boolean hightLight1 = configPersistent1.getHightLight();
 				TemplateEnum selectedValue = fileList.getSelectedValue();
 				String previewCodeString1 = TableGenerate.previewCodeString(dataModel, selectedValue);
 				textPanel.removeAll();
-				Editor newEditor = dataEditorFactory.createEditor(selectedValue.getFileName().formatted(dataModel.get("className") + ""), previewCodeString1);
+				Editor newEditor;
+				if (hightLight1) {
+					newEditor = dataEditorFactory.createEditor(selectedValue.getFileName().formatted(dataModel.get("className") + ""), previewCodeString1);
+				} else {
+					newEditor = dataEditorFactory.createEditor("temp.txt", previewCodeString1);
+				}
 				currentEditor = newEditor; // 更新当前Editor引用
 				textPanel.add(newEditor.getComponent(), BorderLayout.CENTER);
 				textPanel.repaint();

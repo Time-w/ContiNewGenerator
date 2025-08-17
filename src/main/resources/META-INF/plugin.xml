@@ -56,8 +56,8 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <notificationGroup id="ContiNewGenerator.NotificationGroup" displayType="BALLOON"/>
+        <applicationService serviceImplementation="top.continew.config.ContiNewConfigPersistent"/>
         <projectService serviceImplementation="top.continew.persistent.ContiNewGeneratorPersistent"/>
-        <projectService serviceImplementation="top.continew.config.ContiNewConfigPersistent"/>
 
 
         <applicationConfigurable

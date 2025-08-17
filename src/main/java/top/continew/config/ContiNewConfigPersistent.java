@@ -1,9 +1,9 @@
 package top.continew.config;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "ContiNewConfigPersistent", storages = {@Storage("ContiNewConfigPersistent.xml")})
 public class ContiNewConfigPersistent implements PersistentStateComponent<ContiNewConfigPersistent> {
 
-	private boolean hightLight = true;
+	private Boolean hightLight;
 	private String requestExcludeText;
 	private String responseExcludeText;
 	private String requiredExcludeText;
@@ -26,8 +26,8 @@ public class ContiNewConfigPersistent implements PersistentStateComponent<ContiN
 	private String dateType;
 	private String booleanType;
 
-	public static ContiNewConfigPersistent getInstance(Project project) {
-		ContiNewConfigPersistent config = project.getService(ContiNewConfigPersistent.class);
+	public static ContiNewConfigPersistent getInstance() {
+		ContiNewConfigPersistent config = ApplicationManager.getApplication().getService(ContiNewConfigPersistent.class);
 		if (config == null) {
 			config = new ContiNewConfigPersistent();
 		}

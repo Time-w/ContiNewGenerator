@@ -25,22 +25,40 @@ public class ContiNewGeneratorConfigUI {
 	private JComboBox<String> dateTypeComboBox;
 	private JCheckBox highlightCheckBox;
 	private JComboBox<String> booleanTypeComboBox;
-	ContiNewConfigPersistent contiNewConfigPersistent = new ContiNewConfigPersistent();
+	ContiNewConfigPersistent contiNewConfigPersistent = ContiNewConfigPersistent.getInstance();
 
 	public JComponent createComponent() {
 		stringTypeComboBox.setModel(new DefaultComboBoxModel<>(GenerateConstant.QUERY_TYPE_OPTIONS));
 		numberTypeComboBox.setModel(new DefaultComboBoxModel<>(GenerateConstant.QUERY_TYPE_OPTIONS));
 		dateTypeComboBox.setModel(new DefaultComboBoxModel<>(GenerateConstant.QUERY_TYPE_OPTIONS));
 		booleanTypeComboBox.setModel(new DefaultComboBoxModel<>(GenerateConstant.QUERY_TYPE_OPTIONS));
-		contiNewConfigPersistent.setHightLight(true);
-		contiNewConfigPersistent.setRequestExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
-		contiNewConfigPersistent.setResponseExcludeText("id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
-		contiNewConfigPersistent.setRequiredExcludeText("id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
-		contiNewConfigPersistent.setQueryExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
-		contiNewConfigPersistent.setStringType("LIKE '%s%'");
-		contiNewConfigPersistent.setNumberType("=");
-		contiNewConfigPersistent.setDateType("BETWEEN");
-		contiNewConfigPersistent.setBooleanType("=");
+		if (contiNewConfigPersistent.getHightLight() == null) {
+			contiNewConfigPersistent.setHightLight(true);
+		}
+		if (contiNewConfigPersistent.getRequestExcludeText() == null) {
+			contiNewConfigPersistent.setRequestExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
+		}
+		if (contiNewConfigPersistent.getResponseExcludeText() == null) {
+			contiNewConfigPersistent.setResponseExcludeText("id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
+		}
+		if (contiNewConfigPersistent.getRequiredExcludeText() == null) {
+			contiNewConfigPersistent.setRequiredExcludeText("id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
+		}
+		if (contiNewConfigPersistent.getQueryExcludeText() == null) {
+			contiNewConfigPersistent.setQueryExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
+		}
+		if (contiNewConfigPersistent.getStringType() == null) {
+			contiNewConfigPersistent.setStringType("LIKE '%s%'");
+		}
+		if (contiNewConfigPersistent.getNumberType() == null) {
+			contiNewConfigPersistent.setNumberType("=");
+		}
+		if (contiNewConfigPersistent.getDateType() == null) {
+			contiNewConfigPersistent.setDateType("BETWEEN");
+		}
+		if (contiNewConfigPersistent.getBooleanType() == null) {
+			contiNewConfigPersistent.setBooleanType("=");
+		}
 		return rootPanel;
 	}
 
@@ -57,7 +75,7 @@ public class ContiNewGeneratorConfigUI {
 	}
 
 	public void reset() {
-		highlightCheckBox.setSelected(contiNewConfigPersistent.isHightLight());
+		highlightCheckBox.setSelected(contiNewConfigPersistent.getHightLight());
 		requestExcludeTextField.setText(contiNewConfigPersistent.getRequestExcludeText());
 		responseExcludeTextField.setText(contiNewConfigPersistent.getResponseExcludeText());
 		requiredExcludeTextField.setText(contiNewConfigPersistent.getRequiredExcludeText());
@@ -69,7 +87,7 @@ public class ContiNewGeneratorConfigUI {
 	}
 
 	public boolean isModified() {
-		return contiNewConfigPersistent.isHightLight() != highlightCheckBox.isSelected() ||
+		return contiNewConfigPersistent.getHightLight() != highlightCheckBox.isSelected() ||
 				!Objects.equals(contiNewConfigPersistent.getRequestExcludeText(), requestExcludeTextField.getText()) ||
 				!Objects.equals(contiNewConfigPersistent.getResponseExcludeText(), responseExcludeTextField.getText()) ||
 				!Objects.equals(contiNewConfigPersistent.getRequiredExcludeText(), requiredExcludeTextField.getText()) ||
