@@ -57,7 +57,15 @@
     <extensions defaultExtensionNs="com.intellij">
         <notificationGroup id="ContiNewGenerator.NotificationGroup" displayType="BALLOON"/>
         <projectService serviceImplementation="top.continew.persistent.ContiNewGeneratorPersistent"/>
+        <projectService serviceImplementation="top.continew.config.ContiNewConfigPersistent"/>
 
+
+        <applicationConfigurable
+                id="top.continew.config.ContiNewGeneratorConfig"
+                parentId="tools"
+                groupWeight="-100"
+                instance="top.continew.config.ContiNewGeneratorConfig"
+                displayName="ContiNew Config"/>
     </extensions>
     <actions>
         <action id="t.c.ContiNewGenerator"

@@ -1,11 +1,6 @@
 package top.continew.ui;
 
-import com.intellij.ide.highlighter.HtmlFileType;
-import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import java.awt.BorderLayout;
@@ -79,18 +74,6 @@ public class PreviewUI extends DialogWrapper {
 				TableGenerate.generateCode(project, text, templateEnum1, className, moduleName);
 			}
 		});
-	}
-
-	public static FileType getFileType(String fileName) {
-		if (fileName.endsWith(".java")) {
-			return JavaFileType.INSTANCE;
-		} else if (fileName.endsWith(".vue") || fileName.endsWith(".htm") || fileName.endsWith(".html")) {
-			return HtmlFileType.INSTANCE;
-		} else if (fileName.endsWith(".xml")) {
-			return XmlFileType.INSTANCE;
-		} else {
-			return PlainTextFileType.INSTANCE;
-		}
 	}
 
 	@Override

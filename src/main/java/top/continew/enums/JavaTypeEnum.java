@@ -15,7 +15,7 @@ public enum JavaTypeEnum implements BaseEnum<Integer> {
 	Integer(2, "Integer"),
 	Long(3, "Long"),
 	Float(4, "Float"),
-	Double(5, "double"),
+	Double(5, "Double"),
 	Boolean(6, "Boolean"),
 	BigDecimal(7, "BigDecimal"),
 	LocalDate(8, "LocalDate"),
