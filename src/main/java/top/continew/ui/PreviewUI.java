@@ -45,8 +45,7 @@ public class PreviewUI extends DialogWrapper {
 		TemplateEnum templateEnum = files.get(0);
 		String previewCodeString = TableGenerate.previewCodeString(dataModel, templateEnum);
 		DataEditorFactory dataEditorFactory = new DataEditorFactory(project);
-		Editor editor = dataEditorFactory.createEditor(templateEnum.getFileName().formatted(dataModel.get("className") + "")
-				, getFileType(templateEnum.getFileName()), previewCodeString);
+		Editor editor = dataEditorFactory.createEditor(templateEnum.getFileName().formatted(dataModel.get("className") + ""), previewCodeString);
 		currentEditor = editor; // 保存Editor引用
 		textPanel.add(editor.getComponent(), BorderLayout.CENTER);
 		this.setSize(1200, 800);
@@ -64,8 +63,7 @@ public class PreviewUI extends DialogWrapper {
 				TemplateEnum selectedValue = fileList.getSelectedValue();
 				String previewCodeString1 = TableGenerate.previewCodeString(dataModel, selectedValue);
 				textPanel.removeAll();
-				Editor newEditor = dataEditorFactory.createEditor(selectedValue.getFileName().formatted(dataModel.get("className") + "")
-						, getFileType(selectedValue.getFileName()), previewCodeString1);
+				Editor newEditor = dataEditorFactory.createEditor(selectedValue.getFileName().formatted(dataModel.get("className") + ""), previewCodeString1);
 				currentEditor = newEditor; // 更新当前Editor引用
 				textPanel.add(newEditor.getComponent(), BorderLayout.CENTER);
 				textPanel.repaint();

@@ -30,6 +30,48 @@ public class DataEditorFactory {
 	public DataEditorFactory(Project project) {
 		this.project = project;
 	}
+	public Editor createEditor(String fileName,  String text) {
+		VirtualFile sourceVirtualFile = new LightVirtualFile(fileName, text);
+		PsiFile sourceFile = PsiManager.getInstance(project).findFile(sourceVirtualFile);
+		assert sourceFile != null;
+		Document doc = PsiDocumentManager.getInstance(project).getDocument(sourceFile);
+
+		assert doc != null;
+		// 创建编辑器 true 仅用于预览 false 用于编辑
+		Editor editor = EditorFactory.getInstance().createEditor(doc, project, sourceVirtualFile, false, EditorKind.MAIN_EDITOR);
+		EditorSettings editorSettings = editor.getSettings();
+		// 行号显示
+		editorSettings.setLineNumbersShown(true);
+		// 设置显示的缩进导轨
+		editorSettings.setIndentGuidesShown(true);
+		// 折叠块显示
+		editorSettings.setFoldingOutlineShown(false);
+		// 折叠块、行号所展示的区域
+		editorSettings.setLineMarkerAreaShown(false);
+		// 显示设置插入符行（光标选中行会变黄）
+		editorSettings.setCaretRowShown(true);
+		// 禁用编辑器中的错误条纹
+		ErrorStripeEditorCustomization.DISABLED.customize((EditorEx) editor);
+		//禁用编辑器中的拼写检查功能
+		Objects.requireNonNull(SpellCheckingEditorCustomizationProvider.getInstance().getDisabledCustomization()).customize((EditorEx) editor);
+
+		EditorGutterComponentEx gutterComponentEx = ((EditorEx) editor).getGutterComponentEx();
+		// 设置绘画背景
+		gutterComponentEx.setPaintBackground(false);
+		//移除编辑器的边框
+		//editor.setBorder(JBUI.Borders.empty());
+		//json5 的编辑器 换行
+		editorSettings.setUseSoftWraps(true);
+		//editorSettings.setVirtualSpace(false);
+		//editorSettings.setAdditionalColumnsCount(3);
+		//editorSettings.setAdditionalLinesCount(3);
+		// 指定配色方案
+		//toggleColorSchema((EditorEx) editor, editor.getColorsScheme());
+		//setPopupMenu(editor.getComponent());
+		// 切换软换行状态
+		AbstractToggleUseSoftWrapsAction.toggleSoftWraps(editor, null, true);
+		return editor;
+	}
 
 	public Editor createEditor(String fileName, FileType fileType, String text) {
 		VirtualFile sourceVirtualFile = new LightVirtualFile(fileName, fileType, text);
