@@ -1,12 +1,10 @@
 package top.continew.config;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import lombok.Data;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.application.*;
+import com.intellij.openapi.components.*;
+import com.intellij.util.xmlb.*;
+import lombok.*;
+import org.jetbrains.annotations.*;
 
 /**
  * @author Administrator
@@ -30,6 +28,33 @@ public class ContiNewConfigPersistent implements PersistentStateComponent<ContiN
 		ContiNewConfigPersistent config = ApplicationManager.getApplication().getService(ContiNewConfigPersistent.class);
 		if (config == null) {
 			config = new ContiNewConfigPersistent();
+		}
+		if (config.getHightLight() == null) {
+			config.setHightLight(true);
+		}
+		if (config.getRequestExcludeText() == null) {
+			config.setRequestExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
+		}
+		if (config.getResponseExcludeText() == null) {
+			config.setResponseExcludeText("id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
+		}
+		if (config.getRequiredExcludeText() == null) {
+			config.setRequiredExcludeText("id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
+		}
+		if (config.getQueryExcludeText() == null) {
+			config.setQueryExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
+		}
+		if (config.getStringType() == null) {
+			config.setStringType("LIKE '%s%'");
+		}
+		if (config.getNumberType() == null) {
+			config.setNumberType("=");
+		}
+		if (config.getDateType() == null) {
+			config.setDateType("BETWEEN");
+		}
+		if (config.getBooleanType() == null) {
+			config.setBooleanType("=");
 		}
 		return config;
 	}

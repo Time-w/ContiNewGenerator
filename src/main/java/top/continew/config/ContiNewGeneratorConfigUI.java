@@ -1,13 +1,8 @@
 package top.continew.config;
 
-import java.util.Objects;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import top.continew.constant.GenerateConstant;
+import java.util.*;
+import javax.swing.*;
+import top.continew.constant.*;
 
 /**
  * @author Administrator
@@ -32,33 +27,6 @@ public class ContiNewGeneratorConfigUI {
 		numberTypeComboBox.setModel(new DefaultComboBoxModel<>(GenerateConstant.QUERY_TYPE_OPTIONS));
 		dateTypeComboBox.setModel(new DefaultComboBoxModel<>(GenerateConstant.QUERY_TYPE_OPTIONS));
 		booleanTypeComboBox.setModel(new DefaultComboBoxModel<>(GenerateConstant.QUERY_TYPE_OPTIONS));
-		if (contiNewConfigPersistent.getHightLight() == null) {
-			contiNewConfigPersistent.setHightLight(true);
-		}
-		if (contiNewConfigPersistent.getRequestExcludeText() == null) {
-			contiNewConfigPersistent.setRequestExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
-		}
-		if (contiNewConfigPersistent.getResponseExcludeText() == null) {
-			contiNewConfigPersistent.setResponseExcludeText("id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
-		}
-		if (contiNewConfigPersistent.getRequiredExcludeText() == null) {
-			contiNewConfigPersistent.setRequiredExcludeText("id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
-		}
-		if (contiNewConfigPersistent.getQueryExcludeText() == null) {
-			contiNewConfigPersistent.setQueryExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");
-		}
-		if (contiNewConfigPersistent.getStringType() == null) {
-			contiNewConfigPersistent.setStringType("LIKE '%s%'");
-		}
-		if (contiNewConfigPersistent.getNumberType() == null) {
-			contiNewConfigPersistent.setNumberType("=");
-		}
-		if (contiNewConfigPersistent.getDateType() == null) {
-			contiNewConfigPersistent.setDateType("BETWEEN");
-		}
-		if (contiNewConfigPersistent.getBooleanType() == null) {
-			contiNewConfigPersistent.setBooleanType("=");
-		}
 		return rootPanel;
 	}
 
