@@ -1,61 +1,29 @@
 package top.continew.ui;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.vfs.VirtualFile;
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.BeansWrapperBuilder;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.swing.Action;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import top.continew.constant.GenerateConstant;
-import top.continew.entity.SqlColumn;
-import top.continew.entity.SysDict;
-import top.continew.enums.FormTypeEnum;
-import top.continew.enums.QueryTypeEnum;
-import top.continew.enums.TableHeaderEnum;
-import top.continew.format.IdeaCodeFormatter;
-import top.continew.handler.DBTypeEnum;
-import top.continew.icon.PluginIcons;
-import top.continew.persistent.ContiNewGeneratorPersistent;
-import top.continew.utils.CommonUtil;
-import top.continew.utils.DateUtils;
-import top.continew.utils.NotificationUtil;
-import top.continew.version.CommonTemplateEnum;
-import top.continew.version.JavaTemplateEnum;
-import top.continew.version.TemplateEnum;
-import top.continew.version.VueTemplateEnum;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.ui.*;
+import com.intellij.openapi.vfs.*;
+import freemarker.ext.beans.*;
+import freemarker.template.*;
+import java.io.*;
+import java.nio.charset.*;
+import java.util.*;
+import java.util.stream.*;
+import javax.swing.*;
+import javax.swing.table.*;
+import org.apache.commons.io.*;
+import org.apache.commons.lang3.*;
+import org.jetbrains.annotations.*;
+import top.continew.config.*;
+import top.continew.constant.*;
+import top.continew.entity.*;
+import top.continew.enums.*;
+import top.continew.format.*;
+import top.continew.handler.*;
+import top.continew.icon.*;
+import top.continew.persistent.*;
+import top.continew.utils.*;
+import top.continew.version.*;
 
 /**
  * @author lww
@@ -492,6 +460,20 @@ public class TableGenerate extends DialogWrapper {
 
 	private void showTable(Project project, VirtualFile vf, Object selectedItem) {
 		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
+		ContiNewConfigPersistent configPersistent = ContiNewConfigPersistent.getInstance();
+		String resExcludeFields =
+				StringUtils.isNotBlank(configPersistent.getResponseExcludeText()) ? configPersistent.getResponseExcludeText() : GenerateConstant.resExcludeFields;
+		String formExcludeFields =
+				StringUtils.isNotBlank(configPersistent.getRequestExcludeText()) ? configPersistent.getRequestExcludeText() : GenerateConstant.formExcludeFields;
+		String requiredExcludeFields =
+				StringUtils.isNotBlank(configPersistent.getRequiredExcludeText()) ? configPersistent.getRequiredExcludeText() : GenerateConstant.requiredExcludeFields;
+		String queryExcludeFields =
+				StringUtils.isNotBlank(configPersistent.getQueryExcludeText()) ? configPersistent.getQueryExcludeText() : GenerateConstant.queryExcludeFields;
+		String stringType = StringUtils.isNotBlank(configPersistent.getStringType()) ? configPersistent.getStringType() : GenerateConstant.stringTypeLike;
+		String numberType = StringUtils.isNotBlank(configPersistent.getNumberType()) ? configPersistent.getNumberType() : GenerateConstant.numberType;
+		String dateType = StringUtils.isNotBlank(configPersistent.getDateType()) ? configPersistent.getDateType() : GenerateConstant.dateType;
+		String booleanType = StringUtils.isNotBlank(configPersistent.getBooleanType()) ? configPersistent.getBooleanType() : GenerateConstant.booleanType;
+
 		DBTypeEnum dbTypeEnum = DBTypeEnum.valueOf(instance.getDbType());
 		columnTable.setDoubleBuffered(true);
 		String tableName;
@@ -522,54 +504,52 @@ public class TableGenerate extends DialogWrapper {
 				//描述
 				column[5] = sqlColumn.getColumnComment();
 				//列表
-				if (Arrays.asList(GenerateConstant.resExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+				if (Arrays.asList(resExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
 					column[6] = Boolean.FALSE; // 设置为CheckBox
 				} else {
 					column[6] = Boolean.TRUE;
 				}
 				//表单
-				if (Arrays.asList(GenerateConstant.formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+				if (Arrays.asList(formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
 					column[7] = Boolean.FALSE;
 				} else {
 					column[7] = Boolean.TRUE;
 				}
 				//必填
-				if (Arrays.asList(GenerateConstant.requiredExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+				if (Arrays.asList(requiredExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
 					column[8] = Boolean.FALSE;
 				} else {
 					column[8] = Boolean.TRUE;
 				}
 				//查询
-				if (Arrays.asList(GenerateConstant.queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+				if (Arrays.asList(queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
 					column[9] = Boolean.FALSE;
 				} else {
 					// 数字类型默认支持查询 减少选择项
-					if (sqlColumn.isNumber()) {
-						column[9] = Boolean.TRUE;
-					} else {
-						column[9] = Boolean.FALSE;
-					}
+					column[9] = Boolean.TRUE;
+					//if (sqlColumn.isNumber()) {
+					//} else {
+					//	column[9] = Boolean.FALSE;
+					//}
 				}
 				//查询方式
-				if (Arrays.asList(GenerateConstant.queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+				if (Arrays.asList(queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
 					column[10] = GenerateConstant.DEFAULT_TEXT;
 				} else {
 					if (sqlColumn.isNumber()) {
-						column[10] = "=";
-						//} else if (sqlColumn.isDate()) {
-						//	column[10] = "BETWEEN";
-						//} else if (sqlColumn.isDatetime()) {
-						//	column[10] = "BETWEEN";
-						//} else if (sqlColumn.isBool()) {
-						//	column[10] = "=";
-						//} else if (sqlColumn.isString()) {
-						//	column[10] = "LIKE '%s%'";
+						column[10] = numberType;
+					} else if (sqlColumn.isDate() || sqlColumn.isDatetime()) {
+						column[10] = dateType;
+					} else if (sqlColumn.isBool()) {
+						column[10] = booleanType;
+					} else if (sqlColumn.isString()) {
+						column[10] = stringType;
 					} else {
 						column[10] = GenerateConstant.DEFAULT_TEXT;
 					}
 				}
 				//表单类型
-				if (Arrays.asList(GenerateConstant.formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+				if (Arrays.asList(formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
 					column[11] = GenerateConstant.DEFAULT_TEXT;
 				} else {
 					if (sqlColumn.isString()) {

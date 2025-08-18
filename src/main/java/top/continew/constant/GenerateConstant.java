@@ -1,10 +1,7 @@
 package top.continew.constant;
 
-import java.util.Arrays;
-import top.continew.enums.FormTypeEnum;
-import top.continew.enums.JavaTypeEnum;
-import top.continew.enums.QueryTypeEnum;
-import top.continew.enums.TableHeaderEnum;
+import java.util.*;
+import top.continew.enums.*;
 
 /**
  * @author lww
@@ -27,5 +24,8 @@ public interface GenerateConstant {
 	String resExcludeFields = "id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
 	String requiredExcludeFields = "id,createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
 	String queryExcludeFields = "createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy";
-
+	String stringTypeLike = "LIKE '%s%'";
+	String numberType = "=";
+	String booleanType = "=";
+	String dateType = "BETWEEN";
 }

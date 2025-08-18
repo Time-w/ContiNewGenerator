@@ -1,21 +1,15 @@
 package top.continew.ui;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import com.intellij.openapi.editor.*;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.ui.*;
+import java.awt.*;
 import java.util.List;
-import java.util.Map;
-import javax.swing.Action;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import top.continew.config.ContiNewConfigPersistent;
-import top.continew.factoty.DataEditorFactory;
-import top.continew.version.TemplateEnum;
+import java.util.*;
+import javax.swing.*;
+import top.continew.config.*;
+import top.continew.factoty.*;
+import top.continew.version.*;
 
 public class PreviewUI extends DialogWrapper {
 
@@ -34,7 +28,7 @@ public class PreviewUI extends DialogWrapper {
 		setModal(false);
 		setResizable(false);
 		ContiNewConfigPersistent configPersistent = ContiNewConfigPersistent.getInstance();
-		boolean hightLight = configPersistent.getHightLight();
+		boolean hightLight = configPersistent.getHightLight() != null && configPersistent.getHightLight();
 		DefaultListModel<TemplateEnum> listModel = new DefaultListModel<>();
 		files.forEach(listModel::addElement);
 		fileList.setModel(listModel);
@@ -64,7 +58,7 @@ public class PreviewUI extends DialogWrapper {
 		fileList.addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting()) {
 				ContiNewConfigPersistent configPersistent1 = ContiNewConfigPersistent.getInstance();
-				boolean hightLight1 = configPersistent1.getHightLight();
+				boolean hightLight1 = configPersistent1.getHightLight() != null && configPersistent1.getHightLight();
 				TemplateEnum selectedValue = fileList.getSelectedValue();
 				String previewCodeString1 = TableGenerate.previewCodeString(dataModel, selectedValue);
 				textPanel.removeAll();
