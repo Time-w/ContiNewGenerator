@@ -19,8 +19,8 @@ public enum VueTemplateEnum implements TemplateEnum {
 		}
 	},
 	index400("400/frontend/index.ftl", "src.views", "index.vue", "4.0.0"),
-	AddModal400("400/frontend/AddModal.ftl", "src.views", "%sAddModal.vue", "4.0.0"),
-	DetailDrawer400("400/frontend/DetailDrawer.ftl", "src.views", "%sDetailDrawer.vue", "4.0.0"),
+	AddModal400("400/frontend/AddModal.ftl", "src.views", "AddModal.vue", "4.0.0"),
+	DetailDrawer400("400/frontend/DetailDrawer.ftl", "src.views", "DetailDrawer.vue", "4.0.0"),
 
 	api370("370/frontend/api.ftl", "src.apis", "%s.ts", "3.7.0") {
 		@Override
@@ -34,8 +34,8 @@ public enum VueTemplateEnum implements TemplateEnum {
 		}
 	},
 	index370("370/frontend/index.ftl", "src.views", "index.vue", "3.7.0"),
-	AddModal370("370/frontend/AddModal.ftl", "src.views", "%sAddModal.vue", "3.7.0"),
-	DetailDrawer370("370/frontend/DetailDrawer.ftl", "src.views", "%sDetailDrawer.vue", "3.7.0"),
+	AddModal370("370/frontend/AddModal.ftl", "src.views", "AddModal.vue", "3.7.0"),
+	DetailDrawer370("370/frontend/DetailDrawer.ftl", "src.views", "DetailDrawer.vue", "3.7.0"),
 
 	api360("360/frontend/api.ftl", "src.apis", "%s.ts", "3.6.0") {
 		@Override
@@ -49,8 +49,8 @@ public enum VueTemplateEnum implements TemplateEnum {
 		}
 	},
 	index360("360/frontend/index.ftl", "src.views", "index.vue", "3.6.0"),
-	AddModal360("360/frontend/AddModal.ftl", "src.views", "%sAddModal.vue", "3.6.0"),
-	DetailDrawer360("360/frontend/DetailDrawer.ftl", "src.views", "%sDetailDrawer.vue", "3.6.0"),
+	AddModal360("360/frontend/AddModal.ftl", "src.views", "AddModal.vue", "3.6.0"),
+	DetailDrawer360("360/frontend/DetailDrawer.ftl", "src.views", "DetailDrawer.vue", "3.6.0"),
 
 	api350("350/frontend/api.ftl", "src.apis", "%s.ts", "3.5.0") {
 		@Override
@@ -64,8 +64,8 @@ public enum VueTemplateEnum implements TemplateEnum {
 		}
 	},
 	index350("350/frontend/index.ftl", "src.views", "index.vue", "3.5.0"),
-	AddModal350("350/frontend/AddModal.ftl", "src.views", "%sAddModal.vue", "3.5.0"),
-	DetailDrawer350("350/frontend/DetailDrawer.ftl", "src.views", "%sDetailDrawer.vue", "3.5.0"),
+	AddModal350("350/frontend/AddModal.ftl", "src.views", "AddModal.vue", "3.5.0"),
+	DetailDrawer350("350/frontend/DetailDrawer.ftl", "src.views", "DetailDrawer.vue", "3.5.0"),
 	//
 	;
 
