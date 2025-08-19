@@ -5,7 +5,7 @@ import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import top.continew.admin.common.model.resp.BaseResp;
-
+import java.io.Serializable;
 import java.io.Serial;
 <#if hasTimeField>
 import java.time.*;
@@ -22,14 +22,14 @@ import java.math.BigDecimal;
  */
 @Data
 @Schema(description = "${businessName}信息")
-public class ${className}Resp extends BaseResp {
+public class ${className}Resp<#if noBase> implements Serializable <#else> extends BaseResp </#if>{
 
     @Serial
     private static final long serialVersionUID = 1L;
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
     <#if fieldConfig.showInList>
-	 <#if respExcludeFields?seq_contains(fieldConfig.fieldName)>
+	 <#if !noBase &&  respExcludeFields?seq_contains(fieldConfig.fieldName)>
 	  <#continue>
 	 </#if>
 

@@ -9,6 +9,7 @@ import cn.idev.excel.annotation.ExcelProperty;
 
 import top.continew.admin.common.base.model.resp.BaseDetailResp;
 import top.continew.starter.excel.converter.ExcelBaseEnumConverter;
+import java.io.Serializable;
 <#if imports??>
     <#list imports as className>
 import ${className};
@@ -31,13 +32,15 @@ import java.math.BigDecimal;
 @Data
 @ExcelIgnoreUnannotated
 @Schema(description = "${businessName}详情信息")
-public class ${className}DetailResp extends BaseDetailResp {
+public class ${className}DetailResp<#if noBase> implements Serializable <#else> extends BaseDetailResp </#if>{
 
     @Serial
     private static final long serialVersionUID = 1L;
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
-
+  <#if !noBase && detailRespExcludeFields?seq_contains(fieldConfig.fieldName)>
+	  <#continue>
+	 </#if>
     /**
      * ${fieldConfig.comment}
      */

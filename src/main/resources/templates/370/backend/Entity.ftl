@@ -5,7 +5,7 @@ import lombok.Data;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import top.continew.admin.common.model.entity.BaseDO;
-
+import java.io.Serializable;
 <#if imports??>
     <#list imports as className>
 import ${className};
@@ -28,14 +28,14 @@ import java.math.BigDecimal;
  */
 @Data
 @TableName("${tableName}")
-public class ${className}DO extends BaseDO {
+public class ${className}DO <#if noBase> implements Serializable <#else> extends BaseDO </#if>{
 
     @Serial
     private static final long serialVersionUID = 1L;
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
 
-   	<#if doExcludeFields?seq_contains(fieldConfig.fieldName)>
+   	<#if !noBase && doExcludeFields?seq_contains(fieldConfig.fieldName)>
     <#continue>
 	</#if>
 
