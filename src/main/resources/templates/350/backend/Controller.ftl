@@ -5,8 +5,11 @@ import top.continew.starter.extension.crud.enums.Api;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.web.bind.annotation.*;
-
+<#if NoApi>
+import org.springframework.web.bind.annotation.RequestMapping;
+<#else>
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
+</#if>
 import top.continew.admin.common.controller.BaseController;
 import ${packageName}.model.query.${classNamePrefix}Query;
 import ${packageName}.model.req.${classNamePrefix}Req;
@@ -26,7 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+<#if NoApi>
+@RequestMapping("/${apiModuleName}/${apiName}")
+<#else>
 @CrudRequestMapping(value = "/${apiModuleName}/${apiName}", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
-public class ${className}Controller extends BaseController<${classNamePrefix}Service, ${classNamePrefix}Resp, ${classNamePrefix}DetailResp, ${classNamePrefix}Query, ${classNamePrefix}Req> {
+</#if>
+public class ${className}Controller<#if !NoApi> extends BaseController<${classNamePrefix}Service, ${classNamePrefix}Resp, ${classNamePrefix}DetailResp, ${classNamePrefix}Query, ${classNamePrefix}Req> </#if>{
 	private final ${classNamePrefix}Service ${apiName}Service;
 }
