@@ -9,6 +9,7 @@ import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import org.hibernate.validator.constraints.Length;
+import ${packageName}.model.entity.${classNamePrefix}DO;
 
 import java.io.Serial;
 import java.io.Serializable;

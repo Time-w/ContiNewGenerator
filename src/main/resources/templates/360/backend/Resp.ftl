@@ -3,7 +3,7 @@ package ${packageName}.model.resp;
 import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import ${packageName}.model.entity.${classNamePrefix}DO;
 <#if noBase>
 import java.io.Serializable;
 <#else>

@@ -1,21 +1,44 @@
 package ${packageName}.service.impl;
+<#list fieldConfigs as field>
+<#if field.isPrimary?? && field.isPrimary>
+<#assign primaryKey = field.fieldName />
+<#assign primaryComment = field.comment />
+<#assign primaryType = field.fieldType />
+<#break>
+</#if>
+</#list>
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 <#if mpService>
-import top.continew.starter.data.mp.service.impl.ServiceImpl;
+import java.util.List;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.lang3.StringUtils;
+import top.continew.starter.data.util.QueryWrapperHelper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+//import top.continew.starter.data.mp.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import top.continew.starter.extension.crud.model.req.IdsReq;
 <#else>
 import top.continew.starter.extension.crud.service.BaseServiceImpl;
+</#if>
+import ${packageName}.model.resp.${classNamePrefix}DetailResp;
+import top.continew.starter.extension.crud.model.resp.PageResp;
+import top.continew.starter.extension.crud.model.query.PageQuery;
 import ${packageName}.model.query.${classNamePrefix}Query;
 import ${packageName}.model.req.${classNamePrefix}Req;
-import ${packageName}.model.resp.${classNamePrefix}DetailResp;
 import ${packageName}.model.resp.${classNamePrefix}Resp;
-</#if>
 import ${packageName}.mapper.${classNamePrefix}Mapper;
 import ${packageName}.model.entity.${classNamePrefix}DO;
 import ${packageName}.service.${classNamePrefix}Service;
 import lombok.extern.slf4j.Slf4j;
+import top.continew.starter.core.exception.BusinessException;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import top.continew.starter.excel.util.ExcelUtils;
 
 /**
  * ${businessName}业务实现
@@ -27,5 +50,123 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class ${className}ServiceImpl extends <#if mpService>ServiceImpl<${classNamePrefix}Mapper, ${classNamePrefix}DO> implements ${classNamePrefix}Service<#else>BaseServiceImpl<${classNamePrefix}Mapper, ${classNamePrefix}DO, ${classNamePrefix}Resp, ${classNamePrefix}DetailResp, ${classNamePrefix}Query, ${classNamePrefix}Req> implements ${classNamePrefix}Service </#if> {
+
 	private final ${classNamePrefix}Mapper ${apiName}Mapper;
+
+<#if mpService>
+    @Override
+	@Transactional(rollbackFor = Exception.class)
+    public ${primaryType} create${className}(${classNamePrefix}Req ${apiName}Req){
+    	<#list fieldConfigs as field>
+    	<#if field.isUnique?? && field.isUnique>
+    		<#if field.fieldType == "String">
+		if (StringUtils.isNotBlank(${apiName}Req.get${field.fieldName?cap_first}())) {
+    		<#else>
+			if (${apiName}Req.get${field.fieldName?cap_first}() != null) {
+    		</#if>
+			Long count = ${apiName}Mapper.selectCount(new LambdaQueryWrapper<${className}DO>()
+				.eq(${className}DO::get${field.fieldName?cap_first}, ${apiName}Req.get${field.fieldName?cap_first}()));
+			if (count > 0) {
+				throw new BusinessException("新增${businessName}失败，${field.comment}已存在：" + ${apiName}Req.get${field.fieldName?cap_first}());
+			}
+		}
+    	</#if>
+    	</#list>
+        ${className}DO convert = ${classNamePrefix}Req.convert(${apiName}Req);
+        int insert = ${apiName}Mapper.insert(convert);
+        if (insert == 0) {
+            throw new BusinessException("新增${businessName}失败");
+        }
+        return convert.get${primaryKey?cap_first}();
+    }
+
+    @Override
+	@Transactional(rollbackFor = Exception.class)
+    public Boolean delete${className}(${primaryType} ${primaryKey}){
+    	${className}DO ${apiName}DO = ${apiName}Mapper.selectById(${primaryKey});
+        if (${apiName}DO == null) {
+            throw new BusinessException(${primaryKey} + " ${businessName}不存在");
+        }
+        int delete = ${apiName}Mapper.deleteById(${primaryKey});
+        if (delete == 0) {
+            throw new BusinessException("删除${businessName}失败");
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean delete${className}s(List<Long> ids){
+    	int delete = ${apiName}Mapper.deleteByIds(ids);
+        return delete == ids.size();
+    }
+
+    @Override
+	@Transactional(rollbackFor = Exception.class)
+    public ${classNamePrefix}Resp update${className}(${primaryType} ${primaryKey}, ${classNamePrefix}Req ${apiName}Req){
+        if (${primaryKey} == null) {
+            throw new BusinessException("${businessName}${primaryKey}不能为空");
+        }
+        ${className}DO ${apiName}DO = ${apiName}Mapper.selectById(${primaryKey});
+        if (${apiName}DO == null) {
+            throw new BusinessException(${primaryKey} + " ${businessName}不存在");
+        }
+        <#list fieldConfigs as field>
+    	<#if field.isUnique?? && field.isUnique>
+    		<#if field.fieldType == "String">
+		if (StringUtils.isNotBlank(${apiName}Req.get${field.fieldName?cap_first}())) {
+    		<#else>
+		if (${apiName}Req.get${field.fieldName?cap_first}() != null) {
+    		</#if>
+			Long count = ${apiName}Mapper.selectCount(new LambdaQueryWrapper<${className}DO>()
+					.eq(${className}DO::get${field.fieldName?cap_first}, ${apiName}Req.get${field.fieldName?cap_first}())
+					.ne(${className}DO::get${primaryKey?cap_first},${apiName}Req.get${primaryKey?cap_first}()));
+			if (count > 0) {
+				throw new BusinessException("更新${businessName}失败，${field.comment}存在冲突：" + ${apiName}Req.get${field.fieldName?cap_first}());
+			}
+		}
+    	</#if>
+    	</#list>
+        ${className}DO convert = ${classNamePrefix}Req.convert(${apiName}Req);
+        int update = ${apiName}Mapper.updateById(convert);
+        if (update == 0) {
+            throw new BusinessException("更新${businessName}失败");
+        }
+        return ${classNamePrefix}Resp.convert(convert);
+    }
+
+    @Override
+    public ${classNamePrefix}Resp get${className}(${primaryType} ${primaryKey}){
+        ${className}DO ${apiName}DO = ${apiName}Mapper.selectById(${primaryKey});
+        if (${apiName}DO == null) {
+            throw new BusinessException(${primaryKey} + " ${businessName}不存在");
+        }
+        return ${classNamePrefix}Resp.convert(${apiName}DO);
+    }
+
+	@Override
+	public List<${classNamePrefix}Resp> list${className}(${classNamePrefix}Query ${apiName}Query){
+		QueryWrapper<${className}DO> build = QueryWrapperHelper.build(${apiName}Query);
+		List<${className}DO> ${apiName}DOList = ${apiName}Mapper.selectList(build);
+		return ${apiName}DOList.stream().map(${classNamePrefix}Resp::convert).toList();
+	}
+
+    @Override
+    public PageResp<${classNamePrefix}Resp> page${className}(${classNamePrefix}Query ${apiName}Query, PageQuery pageQuery){
+        QueryWrapper<${className}DO> build = QueryWrapperHelper.build(${apiName}Query);
+        Page<${className}DO> ${apiName}DOPage = ${apiName}Mapper.selectPage(new Page<>(pageQuery.getPage(), pageQuery.getSize()), build);
+        PageResp<${classNamePrefix}Resp> pageResp = new PageResp<>();
+        pageResp.setTotal(${apiName}DOPage.getTotal());
+        pageResp.setList(${apiName}DOPage.getRecords().stream().map(${classNamePrefix}Resp::convert).toList());
+        return pageResp;
+    }
+
+    @Override
+    public void export${className}(${classNamePrefix}Query ${apiName}Query, HttpServletResponse response){
+        QueryWrapper<${className}DO> build = QueryWrapperHelper.build(${apiName}Query);
+        List<${className}DO> ${apiName}DOList = ${apiName}Mapper.selectList(build);
+        List<${classNamePrefix}DetailResp> list = ${apiName}DOList.stream().map(${classNamePrefix}DetailResp::convert).toList();
+		ExcelUtils.export(list, "导出数据", ${classNamePrefix}DetailResp.class, response);
+    }
+    </#if>
 }

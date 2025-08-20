@@ -7,7 +7,9 @@ package ${packageName}.service;
 <#break>
 </#if>
 </#list>
+
 <#if mpService>
+import java.util.List;
 import ${packageName}.model.entity.${classNamePrefix}DO;
 //import top.continew.starter.data.mp.service.IService;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -47,12 +49,21 @@ public interface ${className}Service extends <#if mpService>IService<${className
     Boolean delete${className}(${primaryType} ${primaryKey});
 
     /**
+     * 批量删除 ${businessName}
+     *
+     * @param ids
+     * @return Boolean
+     */
+    Boolean delete${className}s(List<Long> ids);
+
+    /**
      * 更新 ${businessName}
      *
+     * @param ${primaryKey}
      * @param ${apiName}Req
      * @return ${classNamePrefix}Resp
      */
-    ${classNamePrefix}Resp update${className}(${classNamePrefix}Req ${apiName}Req);
+    ${classNamePrefix}Resp update${className}(${primaryType} ${primaryKey}, ${classNamePrefix}Req ${apiName}Req);
 
     /**
      * 查询 ${businessName}
@@ -61,6 +72,14 @@ public interface ${className}Service extends <#if mpService>IService<${className
      * @return ${classNamePrefix}Resp
      */
     ${classNamePrefix}Resp get${className}(${primaryType} ${primaryKey});
+
+    /**
+     * 查询列表 ${businessName}
+     *
+     * @param ${apiName}Query
+     * @return List<${classNamePrefix}Resp>
+     */
+	List<${classNamePrefix}Resp> list${className}(${classNamePrefix}Query ${apiName}Query);
 
     /**
      * 分页查询 ${businessName}

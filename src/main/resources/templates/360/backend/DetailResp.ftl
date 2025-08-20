@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
-
+import ${packageName}.model.entity.${classNamePrefix}DO;
 <#if noBase>
 import java.io.Serializable;
 <#else>
@@ -46,4 +46,19 @@ public class ${className}DetailResp<#if noBase> implements Serializable <#else> 
     private ${fieldConfig.fieldType} ${fieldConfig.fieldName};
   </#list>
 </#if>
+
+	public static ${className}DetailResp convert(${className}DO ${apiName}DO) {
+		${className}DetailResp ${apiName}DetailResp = new ${className}DetailResp();
+		<#if fieldConfigs??>
+		  <#list fieldConfigs as fieldConfig>
+			<#if fieldConfig.showInList>
+		  		<#if respExcludeFields?seq_contains(fieldConfig.fieldName)>
+	  			<#continue>
+	 			</#if>
+		${apiName}DetailResp.set${fieldConfig.fieldName?cap_first}(${apiName}DO.get${fieldConfig.fieldName?cap_first}());
+			</#if>
+		  </#list>
+		</#if>
+		return ${apiName}DetailResp;
+	}
 }

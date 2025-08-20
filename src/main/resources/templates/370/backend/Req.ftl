@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import ${packageName}.model.entity.${classNamePrefix}DO;
 import org.hibernate.validator.constraints.Length;
 <#if imports??>
     <#list imports as className>
