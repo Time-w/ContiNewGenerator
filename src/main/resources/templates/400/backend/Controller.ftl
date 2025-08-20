@@ -94,7 +94,7 @@ public class ${className}Controller<#if !NoApi> extends BaseController<${classNa
 
 	@Operation(summary = "查询${businessName}列表")
 	@SaCheckPermission(value = "${apiModuleName}:${apiName}:query")
-	@PostMapping("/list")
+	@GetMapping("/list")
 	public List<${classNamePrefix}Resp> list${className}(@ParameterObject ${classNamePrefix}Query ${apiName}Query) {
 		return ${apiName}Service.list${className}(${apiName}Query);
 	}

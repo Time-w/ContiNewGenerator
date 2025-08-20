@@ -61,12 +61,13 @@ public class ${className}ServiceImpl extends <#if mpService>ServiceImpl<${classN
     		<#if field.fieldType == "String">
 		if (StringUtils.isNotBlank(${apiName}Req.get${field.fieldName?cap_first}())) {
     		<#else>
-		if (${apiName}Req.get${field.fieldName?cap_first}() != null) {
+			if (${apiName}Req.get${field.fieldName?cap_first}() != null) {
     		</#if>
-		Long count = ${apiName}Mapper.selectCount(new LambdaQueryWrapper<${className}DO>()
-				.eq(${className}::get${field.fieldName?cap_first}, ${apiName}Req.get${field.fieldName?cap_first}()));
-		if (count > 0) {
-			throw new BusinessException("新增${businessName}失败，${field.comment}已存在：" + ${apiName}Req.get${field.fieldName?cap_first}());
+			Long count = ${apiName}Mapper.selectCount(new LambdaQueryWrapper<${className}DO>()
+				.eq(${className}DO::get${field.fieldName?cap_first}, ${apiName}Req.get${field.fieldName?cap_first}()));
+			if (count > 0) {
+				throw new BusinessException("新增${businessName}失败，${field.comment}已存在：" + ${apiName}Req.get${field.fieldName?cap_first}());
+			}
 		}
     	</#if>
     	</#list>
@@ -110,11 +111,12 @@ public class ${className}ServiceImpl extends <#if mpService>ServiceImpl<${classN
     		<#else>
 		if (${apiName}Req.get${field.fieldName?cap_first}() != null) {
     		</#if>
-		Long count = ${apiName}Mapper.selectCount(new LambdaQueryWrapper<${className}DO>()
-				.eq(${className}::get${field.fieldName?cap_first}, ${apiName}Req.get${field.fieldName?cap_first}())
-				.ne(${className}::get${primaryKey?cap_first},${apiName}Req.get${primaryKey?cap_first}()));
-		if (count > 0) {
-			throw new BusinessException("更新${businessName}失败，${field.comment}存在冲突：" + ${apiName}Req.get${field.fieldName?cap_first}());
+			Long count = ${apiName}Mapper.selectCount(new LambdaQueryWrapper<${className}DO>()
+					.eq(${className}DO::get${field.fieldName?cap_first}, ${apiName}Req.get${field.fieldName?cap_first}())
+					.ne(${className}DO::get${primaryKey?cap_first},${apiName}Req.get${primaryKey?cap_first}()));
+			if (count > 0) {
+				throw new BusinessException("更新${businessName}失败，${field.comment}存在冲突：" + ${apiName}Req.get${field.fieldName?cap_first}());
+			}
 		}
     	</#if>
     	</#list>
