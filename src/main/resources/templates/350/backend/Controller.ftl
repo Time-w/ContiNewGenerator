@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.extension.crud.model.query.PageQuery;
+import org.springdoc.core.annotations.ParameterObject;
 <#else>
 import top.continew.starter.extension.crud.enums.Api;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.admin.common.controller.BaseController;
 import ${packageName}.model.resp.${classNamePrefix}DetailResp;
 </#if>
-import org.springdoc.core.annotations.ParameterObject;
 import ${packageName}.model.query.${classNamePrefix}Query;
 import ${packageName}.model.req.${classNamePrefix}Req;
 import ${packageName}.model.resp.${classNamePrefix}Resp;

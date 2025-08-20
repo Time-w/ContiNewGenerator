@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 <#if mpService>
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import top.continew.starter.data.mp.service.impl.ServiceImpl;
-<#else>
-//import top.continew.starter.extension.crud.service.BaseServiceImpl;
+//import top.continew.starter.data.mp.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+<#else>
+import top.continew.starter.extension.crud.service.BaseServiceImpl;
 </#if>
 import ${packageName}.model.resp.${classNamePrefix}DetailResp;
 import top.continew.starter.extension.crud.model.resp.PageResp;
