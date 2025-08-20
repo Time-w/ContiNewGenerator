@@ -15,6 +15,7 @@ import ${className};
     </#list>
 </#if>
 import java.io.Serial;
+import ${packageName}.model.entity.${classNamePrefix}DO;
 <#if hasTimeField>
 import java.time.*;
 </#if>

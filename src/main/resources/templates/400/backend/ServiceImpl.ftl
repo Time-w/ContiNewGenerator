@@ -69,7 +69,7 @@ public class ${className}ServiceImpl extends <#if mpService>ServiceImpl<${classN
 
     @Override
     public ${classNamePrefix}Resp update${className}(${classNamePrefix}Req ${apiName}Req){
-        ${primaryType} ${primaryKey} = deptReq.get${primaryKey?cap_first}();
+        ${primaryType} ${primaryKey} = ${apiName}Req.get${primaryKey?cap_first}();
         if (${primaryKey} == null) {
             throw new BusinessException("${businessName}${primaryKey}不能为空");
         }
@@ -94,7 +94,7 @@ public class ${className}ServiceImpl extends <#if mpService>ServiceImpl<${classN
     public PageResp<${classNamePrefix}Resp> page${className}(${classNamePrefix}Query ${apiName}Query, PageQuery pageQuery){
         QueryWrapper<${className}DO> build = QueryWrapperHelper.build(${apiName}Query);
         Page<${className}DO> ${apiName}DOPage = ${apiName}Mapper.selectPage(new Page<>(pageQuery.getPage(), pageQuery.getSize()), build);
-        PageResp<${className}> pageResp = new PageResp<>();
+        PageResp<${classNamePrefix}Resp> pageResp = new PageResp<>();
         pageResp.setTotal(${apiName}DOPage.getTotal());
         pageResp.setList(${apiName}DOPage.getRecords().stream().map(${classNamePrefix}Resp::convert).toList());
         return pageResp;
