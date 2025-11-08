@@ -60,6 +60,7 @@ public class MainGenerator extends DialogWrapper {
 	private JCheckBox controllerNoApiCheckBox;
 	private JCheckBox serviceMPCheckBox;
 	private JCheckBox noBaseClassCheckBox;
+	private JButton donationButton;
 
 	public MainGenerator(Project project) {
 		super(project);
@@ -69,6 +70,13 @@ public class MainGenerator extends DialogWrapper {
 		this.init();
 		initVersion();
 		reShow(project);
+		donationButton.setIcon(PluginIcons.donation);
+		donationButton.setRolloverIcon(PluginIcons.donation_enter);
+		donationButton.setPressedIcon(PluginIcons.donation);
+		//donationButton.setContentAreaFilled(false);
+		//donationButton.setBorderPainted(false);
+		donationButton.setToolTipText("Donation");
+
 		configFilePathButton.setIcon(PluginIcons.yaml);
 		configFilePathButton.addActionListener(e -> chooseConfigPath(project));
 		selectPathButton.setIcon(PluginIcons.springBoot);
@@ -87,6 +95,10 @@ public class MainGenerator extends DialogWrapper {
 		tableNameTextField.addActionListener(e -> setBusinessNameAndPrefix());
 		selectPackageButton.setIcon(PluginIcons.package1);
 		selectPackageButton.addActionListener(e -> choosePackage(project));
+		donationButton.addActionListener(e -> {
+			Donation donation = new Donation(project);
+			donation.show();
+		});
 	}
 
 	private void initVersion() {

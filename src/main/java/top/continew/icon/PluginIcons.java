@@ -37,6 +37,10 @@ public class PluginIcons {
 	public static final Icon showLogs = load("/icons/showLogs.svg");
 	public static final Icon showLogs_dark = load("/icons/showLogs_dark.svg");
 
+	public static final Icon donation = load("/icons/donation.svg");
+	public static final Icon donation_enter = load("/icons/donation_enter.svg");
+
+
 	public static Icon load(String iconPath) {
 		return IconLoader.getIcon(iconPath, PluginIcons.class);
 	}
