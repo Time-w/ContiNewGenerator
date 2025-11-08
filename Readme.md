@@ -1,9 +1,29 @@
-### todo
-1. 添加配置页面
-2. top.continew.ui.PreviewUI.getFileType 配置文件类型
-   1. 改为配置
-   2. top.continew.constant.GenerateConstant.formExcludeFields 
-   3. top.continew.constant.GenerateConstant.resExcludeFields 
-   4. top.continew.constant.GenerateConstant.requiredExcludeFields 
-   5. top.continew.constant.GenerateConstant.queryExcludeFields
-3. 
+<a href="https://gitcode.com/continew/continew-admin">ContiNew Admin</a> Code Generator
+
+Version Support: 3.5.0 | 3.6.0 | 3.7.0 | 4.0.0
+
+Database Support: MySQL, PostgreSQL
+
+Automatic parsing of database configuration information, connecting to the database
+
+Configurable output directories (front-end & back-end)
+
+Generates complete code to specified paths
+
+Uses ContiNew Admin template standards
+
+Direct code generation with one-click operation
+    
+
+---
+
+为<a href="https://gitcode.com/continew/continew-admin">ContiNew Admin</a>量身定制的代码生成器
+
+支持3.5.0、3.6.0、3.7.0、4.0.0版本。
+
+支持MySQL和PostgreSQL数据库。
+
+根据配置文件自动解析数据库配置信息, 连接数据库
+
+设置前端, 后端目录后, 一键生成前端, 后端代码到指定目录,
+生成的代码采用 ContiNew Admin 项目的代码生成器模板, 生成后可直接使用
