@@ -16,7 +16,7 @@ public class ContiNewGeneratorConfig implements Configurable {
 
 	@Override
 	public @ConfigurableName String getDisplayName() {
-		return "ContiNew Config";
+		return "ContiNewGenerator Config";
 	}
 
 	@Override

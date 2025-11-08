@@ -65,7 +65,7 @@
                 parentId="tools"
                 groupWeight="-100"
                 instance="top.continew.config.ContiNewGeneratorConfig"
-                displayName="ContiNew Config"/>
+                displayName="ContiNewGenerator Config"/>
     </extensions>
     <actions>
         <action id="t.c.ContiNewGenerator"
