@@ -3,7 +3,6 @@ package top.continew.utils;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -13,11 +12,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 public class FileChooseUtils {
 
 	private final Project project;
-	private final FileEditorManager fileEditorManager;
 
 	private FileChooseUtils(final Project project) {
 		this.project = project;
-		this.fileEditorManager = FileEditorManager.getInstance(project);
 	}
 
 	public static FileChooseUtils getInstance(Project project) {

@@ -51,6 +51,8 @@ import top.continew.format.IdeaCodeFormatter;
 import top.continew.handler.DBTypeEnum;
 import top.continew.icon.PluginIcons;
 import top.continew.persistent.ContiNewGeneratorPersistent;
+import top.continew.persistent.TableGeneratePersistent;
+import top.continew.persistent.table.FieldProperties;
 import top.continew.utils.CommonUtil;
 import top.continew.utils.DateUtils;
 import top.continew.utils.NotificationUtil;
@@ -184,12 +186,23 @@ public class TableGenerate extends DialogWrapper {
 		dataModel.put("respExcludeFields", GenerateConstant.respExcludeFields.split(","));
 		dataModel.put("detailRespExcludeFields", GenerateConstant.detailRespExcludeFields.split(","));
 
+		TableGeneratePersistent tablePersistent = TableGeneratePersistent.getInstance(project);
+		Map<String, Map<String, FieldProperties>> propertiesMap = tablePersistent.getFieldPropertiesMap();
+		if (propertiesMap == null) {
+			propertiesMap = new HashMap<>();
+			tablePersistent.setFieldPropertiesMap(propertiesMap);
+		}
+		//先移除之前的配置
+		propertiesMap.remove(tableName);
+		Map<String, FieldProperties> fieldPropertiesMap = new HashMap<>();
+		propertiesMap.put(tableName, fieldPropertiesMap);
 		List<Map<String, Object>> fieldConfigs = new ArrayList<>();
 		dataModel.put("fieldConfigs", fieldConfigs);
 		Map<String, Object> fieldConfig;
 		TableColumnModel columnModel = columnTable.getColumnModel();
 		int rowCount = columnTable.getRowCount();
 		for (int i = 0; i < rowCount; i++) {
+			FieldProperties fieldProperties = new FieldProperties();
 			fieldConfig = new HashMap<>();
 			fieldConfigs.add(fieldConfig);
 			fieldConfig.put("tableName", tableName);
@@ -205,11 +218,13 @@ public class TableGenerate extends DialogWrapper {
 				// 列名称
 				if (columnName.equals(TableHeaderEnum.COLUMN_NAME.getDescription())) {
 					fieldConfig.put("columnName", columnTable.getValueAt(i, j).toString());
+					fieldPropertiesMap.put(columnTable.getValueAt(i, j).toString(), fieldProperties);
 					continue;
 				}
 				// 字段名称
 				if (columnName.equals(TableHeaderEnum.CODE_NAME.getDescription())) {
 					fieldConfig.put("fieldName", columnTable.getValueAt(i, j).toString());
+					fieldProperties.setCodeName(columnTable.getValueAt(i, j).toString());
 					continue;
 				}
 				// 列类型
@@ -224,6 +239,7 @@ public class TableGenerate extends DialogWrapper {
 				// Java类型
 				if (columnName.equals(TableHeaderEnum.CODE_TYPE.getDescription())) {
 					fieldConfig.put("fieldType", columnTable.getValueAt(i, j).toString());
+					fieldProperties.setCodeType(columnTable.getValueAt(i, j).toString());
 					if (columnTable.getValueAt(i, j).toString().equalsIgnoreCase("BigDecimal")) {
 						dataModel.put("hasBigDecimalField", true);
 					}
@@ -232,21 +248,25 @@ public class TableGenerate extends DialogWrapper {
 				// 描述
 				if (columnName.equals(TableHeaderEnum.DESCRIPTION.getDescription())) {
 					fieldConfig.put("comment", columnTable.getValueAt(i, j).toString());
+					fieldProperties.setDescription(columnTable.getValueAt(i, j).toString());
 					continue;
 				}
 				// 列表
 				if (columnName.equals(TableHeaderEnum.TABLE_LIST.getDescription())) {
 					fieldConfig.put("showInList", columnTable.getValueAt(i, j));
+					fieldProperties.setTableList((Boolean) columnTable.getValueAt(i, j));
 					continue;
 				}
 				// 表单
 				if (columnName.equals(TableHeaderEnum.TABLE_FORM.getDescription())) {
 					fieldConfig.put("showInForm", columnTable.getValueAt(i, j));
+					fieldProperties.setTableForm((Boolean) columnTable.getValueAt(i, j));
 					continue;
 				}
 				// 必填
 				if (columnName.equals(TableHeaderEnum.REQUIRED.getDescription())) {
 					fieldConfig.put("isRequired", columnTable.getValueAt(i, j));
+					fieldProperties.setRequired((Boolean) columnTable.getValueAt(i, j));
 					if (columnTable.getValueAt(i, j).equals(Boolean.TRUE)) {
 						dataModel.put("hasRequiredField", true);
 					}
@@ -255,6 +275,7 @@ public class TableGenerate extends DialogWrapper {
 				// 查询
 				if (columnName.equals(TableHeaderEnum.QUERY_FIELD.getDescription())) {
 					fieldConfig.put("showInQuery", columnTable.getValueAt(i, j));
+					fieldProperties.setQueryField((Boolean) columnTable.getValueAt(i, j));
 					continue;
 				}
 				// 查询方式
@@ -264,11 +285,14 @@ public class TableGenerate extends DialogWrapper {
 						QueryTypeEnum typeEnum = QueryTypeEnum.getByDes(queryType);
 						if (typeEnum != null) {
 							fieldConfig.put("queryType", typeEnum.name());
+							fieldProperties.setQueryType(typeEnum.name());
 						} else {
 							fieldConfig.put("queryType", "");
+							fieldProperties.setQueryType("");
 						}
 					} else {
 						fieldConfig.put("queryType", "");
+						fieldProperties.setQueryType("");
 					}
 					continue;
 				}
@@ -279,11 +303,14 @@ public class TableGenerate extends DialogWrapper {
 						FormTypeEnum typeEnum = FormTypeEnum.getByDes(formType);
 						if (typeEnum != null) {
 							fieldConfig.put("formType", typeEnum.name());
+							fieldProperties.setFormShowType(typeEnum.name());
 						} else {
 							fieldConfig.put("formType", "");
+							fieldProperties.setFormShowType("");
 						}
 					} else {
 						fieldConfig.put("formType", "");
+						fieldProperties.setFormShowType("");
 					}
 					continue;
 				}
@@ -296,12 +323,15 @@ public class TableGenerate extends DialogWrapper {
 						if (o != null) {
 							dataModel.put("hasDictField", true);
 							fieldConfig.put("dictCode", o);
+							fieldProperties.setRelationDict((String) o);
 							dictCodes.add(o);
 						} else {
 							fieldConfig.put("dictCode", "");
+							fieldProperties.setRelationDict("");
 						}
 					} else {
 						fieldConfig.put("dictCode", "");
+						fieldProperties.setRelationDict("");
 					}
 					continue;
 				}
@@ -548,94 +578,149 @@ public class TableGenerate extends DialogWrapper {
 					.toList();
 			dictMap = dictNames.stream().collect(Collectors.toMap(SysDict::getName, SysDict::getCode));
 			data = new Object[columns.size()][];
-			for (int i = 0; i < columns.size(); i++) {
-				SqlColumn sqlColumn = columns.get(i);
-				Object[] column = new Object[GenerateConstant.COLUMN_LIST.length];
-				//序号
-				column[0] = i + 1;
-				//名称
-				column[1] = sqlColumn.getColumnName();
-				//字段名称
-				column[2] = sqlColumn.getJavaField();
-				//类型
-				column[3] = sqlColumn.getDataType();
-				//Java类型
-				column[4] = sqlColumn.getJavaType();
-				//描述
-				column[5] = sqlColumn.getColumnComment();
-				//列表
-				if (Arrays.asList(resExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[6] = Boolean.FALSE; // 设置为CheckBox
-				} else {
-					column[6] = Boolean.TRUE;
-				}
-				//表单
-				if (Arrays.asList(formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[7] = Boolean.FALSE;
-				} else {
-					column[7] = Boolean.TRUE;
-				}
-				//必填
-				if (Arrays.asList(requiredExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[8] = Boolean.FALSE;
-				} else {
-					column[8] = Boolean.TRUE;
-				}
-				//查询
-				if (Arrays.asList(queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[9] = Boolean.FALSE;
-				} else {
-					// 数字类型默认支持查询 减少选择项
-					column[9] = Boolean.TRUE;
-					//if (sqlColumn.isNumber()) {
-					//} else {
-					//	column[9] = Boolean.FALSE;
-					//}
-				}
-				//查询方式
-				if (Arrays.asList(queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[10] = GenerateConstant.DEFAULT_TEXT;
-				} else {
-					if (sqlColumn.isNumber()) {
-						column[10] = numberType;
-					} else if (sqlColumn.isDate() || sqlColumn.isDatetime()) {
-						column[10] = dateType;
-					} else if (sqlColumn.isBool()) {
-						column[10] = booleanType;
-					} else if (sqlColumn.isString()) {
-						column[10] = stringType;
+
+			TableGeneratePersistent tablePersistent = TableGeneratePersistent.getInstance(project);
+			Map<String, Map<String, FieldProperties>> propertiesMap = tablePersistent.getFieldPropertiesMap();
+			if (propertiesMap == null) {
+				propertiesMap = new HashMap<>();
+			}
+			Map<String, FieldProperties> fieldPropertiesMap = propertiesMap.get(tableName);
+			if (fieldPropertiesMap != null) {
+				for (int i = 0; i < columns.size(); i++) {
+					SqlColumn sqlColumn = columns.get(i);
+					Object[] column = new Object[GenerateConstant.COLUMN_LIST.length];
+					//序号
+					column[0] = i + 1;
+					//名称
+					column[1] = sqlColumn.getColumnName();
+					//字段名称
+					FieldProperties properties = fieldPropertiesMap.get(sqlColumn.getColumnName());
+					column[2] = properties.getCodeName();
+					//类型
+					column[3] = sqlColumn.getDataType();
+					//Java类型
+					column[4] = properties.getCodeType();
+					//描述
+					column[5] = properties.getDescription();
+					//列表
+					column[6] = properties.isTableList();
+					//表单
+					column[7] = properties.isTableForm();
+					//必填
+					column[8] = properties.isRequired();
+					//查询
+					column[9] = properties.isQueryField();
+					//查询方式
+					String queryType = properties.getQueryType();
+					QueryTypeEnum queryTypeEnum = QueryTypeEnum.valueOf(queryType);
+					column[10] = queryTypeEnum.getDescription();
+					//表单类型
+					String formShowType = properties.getFormShowType();
+					FormTypeEnum formTypeEnum = FormTypeEnum.valueOf(formShowType);
+					column[11] = formTypeEnum.getDescription();
+					//关联字典
+					String relationDict = properties.getRelationDict();
+					column[12] = StringUtils.isBlank(relationDict) ? GenerateConstant.DEFAULT_TEXT : relationDict;
+					data[columns.indexOf(sqlColumn)] = column;
+					column[13] = sqlColumn.getCharacterMaximumLength();
+					column[14] = sqlColumn.isPrimaryKey();
+					column[15] = sqlColumn.isNULLAble();
+					if (uniqueIndexList.contains(sqlColumn.getColumnName()) && !sqlColumn.isPrimaryKey()) {
+						column[16] = Boolean.TRUE;
 					} else {
+						column[16] = Boolean.FALSE;
+					}
+				}
+			} else {
+				for (int i = 0; i < columns.size(); i++) {
+					SqlColumn sqlColumn = columns.get(i);
+					Object[] column = new Object[GenerateConstant.COLUMN_LIST.length];
+					//序号
+					column[0] = i + 1;
+					//名称
+					column[1] = sqlColumn.getColumnName();
+					//字段名称
+					column[2] = sqlColumn.getJavaField();
+					//类型
+					column[3] = sqlColumn.getDataType();
+					//Java类型
+					column[4] = sqlColumn.getJavaType();
+					//描述
+					column[5] = sqlColumn.getColumnComment();
+					//列表
+					if (Arrays.asList(resExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+						column[6] = Boolean.FALSE; // 设置为CheckBox
+					} else {
+						column[6] = Boolean.TRUE;
+					}
+					//表单
+					if (Arrays.asList(formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+						column[7] = Boolean.FALSE;
+					} else {
+						column[7] = Boolean.TRUE;
+					}
+					//必填
+					if (Arrays.asList(requiredExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+						column[8] = Boolean.FALSE;
+					} else {
+						column[8] = Boolean.TRUE;
+					}
+					//查询
+					if (Arrays.asList(queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+						column[9] = Boolean.FALSE;
+					} else {
+						// 数字类型默认支持查询 减少选择项
+						column[9] = Boolean.TRUE;
+						//if (sqlColumn.isNumber()) {
+						//} else {
+						//	column[9] = Boolean.FALSE;
+						//}
+					}
+					//查询方式
+					if (Arrays.asList(queryExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
 						column[10] = GenerateConstant.DEFAULT_TEXT;
-					}
-				}
-				//表单类型
-				if (Arrays.asList(formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
-					column[11] = GenerateConstant.DEFAULT_TEXT;
-				} else {
-					if (sqlColumn.isString()) {
-						column[11] = "输入框";
-					} else if (sqlColumn.isDate()) {
-						column[11] = FormTypeEnum.DATE.getDescription();
-					} else if (sqlColumn.isDatetime()) {
-						column[11] = FormTypeEnum.DATE_TIME.getDescription();
-					} else if (sqlColumn.isBool()) {
-						column[11] = FormTypeEnum.SWITCH.getDescription();
-					} else if (sqlColumn.isNumber()) {
-						column[11] = FormTypeEnum.INPUT_NUMBER.getDescription();
 					} else {
-						column[11] = GenerateConstant.DEFAULT_TEXT;
+						if (sqlColumn.isNumber()) {
+							column[10] = numberType;
+						} else if (sqlColumn.isDate() || sqlColumn.isDatetime()) {
+							column[10] = dateType;
+						} else if (sqlColumn.isBool()) {
+							column[10] = booleanType;
+						} else if (sqlColumn.isString()) {
+							column[10] = stringType;
+						} else {
+							column[10] = GenerateConstant.DEFAULT_TEXT;
+						}
 					}
-				}
-				//关联字典
-				column[12] = GenerateConstant.DEFAULT_TEXT;
-				data[columns.indexOf(sqlColumn)] = column;
-				column[13] = sqlColumn.getCharacterMaximumLength();
-				column[14] = sqlColumn.isPrimaryKey();
-				column[15] = sqlColumn.isNULLAble();
-				if (uniqueIndexList.contains(sqlColumn.getColumnName()) && !sqlColumn.isPrimaryKey()) {
-					column[16] = Boolean.TRUE;
-				} else {
-					column[16] = Boolean.FALSE;
+					//表单类型
+					if (Arrays.asList(formExcludeFields.split(",")).contains(sqlColumn.getJavaField())) {
+						column[11] = GenerateConstant.DEFAULT_TEXT;
+					} else {
+						if (sqlColumn.isString()) {
+							column[11] = "输入框";
+						} else if (sqlColumn.isDate()) {
+							column[11] = FormTypeEnum.DATE.getDescription();
+						} else if (sqlColumn.isDatetime()) {
+							column[11] = FormTypeEnum.DATE_TIME.getDescription();
+						} else if (sqlColumn.isBool()) {
+							column[11] = FormTypeEnum.SWITCH.getDescription();
+						} else if (sqlColumn.isNumber()) {
+							column[11] = FormTypeEnum.INPUT_NUMBER.getDescription();
+						} else {
+							column[11] = GenerateConstant.DEFAULT_TEXT;
+						}
+					}
+					//关联字典
+					column[12] = GenerateConstant.DEFAULT_TEXT;
+					data[columns.indexOf(sqlColumn)] = column;
+					column[13] = sqlColumn.getCharacterMaximumLength();
+					column[14] = sqlColumn.isPrimaryKey();
+					column[15] = sqlColumn.isNULLAble();
+					if (uniqueIndexList.contains(sqlColumn.getColumnName()) && !sqlColumn.isPrimaryKey()) {
+						column[16] = Boolean.TRUE;
+					} else {
+						column[16] = Boolean.FALSE;
+					}
 				}
 			}
 
