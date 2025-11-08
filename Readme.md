@@ -27,3 +27,13 @@ Direct code generation with one-click operation
 
 设置前端, 后端目录后, 一键生成前端, 后端代码到指定目录,
 生成的代码采用 ContiNew Admin 项目的代码生成器模板, 生成后可直接使用
+
+
+
+## 捐赠
+
+如果您觉得此插件对您有帮助，节省了您的时间，提高了您的效率，请支持作者，期待您的捐赠。
+
+![](src/main/resources/icons/wx.jpg)
+
+![](src/main/resources/icons/zfb.jpg)
