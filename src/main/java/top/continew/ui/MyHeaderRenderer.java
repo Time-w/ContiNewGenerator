@@ -29,7 +29,7 @@ public class MyHeaderRenderer extends DefaultTableCellRenderer {
 		// 设置为不透明
 		label.setOpaque(true);
 		// 背景色
-		label.setBackground(JBColor.getHSBColor(0.797f, 0.135f, 0.929f));
+		label.setBackground(new JBColor(new Color(173, 216, 230), new Color(50, 50, 100)));
 		// 前景色
 		label.setForeground(JBColor.BLACK);
 		// 设置图标与文本之间的间距
