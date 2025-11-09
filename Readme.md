@@ -15,7 +15,6 @@ Generates complete code to specified paths
 Uses ContiNew Admin template standards
 
 Direct code generation with one-click operation
-    
 
 ---
 
