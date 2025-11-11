@@ -28,11 +28,11 @@ public class Donation extends DialogWrapper {
 		super(project);
 		init();
 		setResizable(false);
-		setTitle("Donation");
+		setTitle("捐赠");
 		//contentPanel.setPreferredSize(JBUI.size(300, 400));
-		donationLabel.setText("If you like our plugin, please consider donating to support us. Thank you!");
-		lastLabel.setText("Half of all donated funds will be donated to The Continew Project. Thank you for your donation!");
-		infoLabel.setText("Looking for customized plugin development? Please contact us by email:");
+		donationLabel.setText("如果您觉得插件还不错，欢迎扫码捐赠支持作者,感谢您对 ContiNewGenerator 的支持!");
+		lastLabel.setText("您捐赠一半将会捐赠给 Continew Admin 项目。感谢您的支持！");
+		infoLabel.setText("老程序员的自我救赎，插件定制开发，请联系邮箱:");
 		emailText.setText("lerder@foxmail.com");
 		ImageIcon wx = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/wx.jpg")));
 		//wx.setImage(wx.getImage().getScaledInstance(268, 365, Image.SCALE_DEFAULT));

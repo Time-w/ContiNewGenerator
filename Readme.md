@@ -1,3 +1,6 @@
+
+>  老程序员的自我救赎
+
 # 简单说明
 
 <a href="https://gitcode.com/continew/continew-admin">ContiNew Admin</a> Code Generator
@@ -70,7 +73,11 @@ Direct code generation with one-click operation
 
 # 捐赠
 
-如果您觉得此插件对您有帮助，节省了您的时间，提高了您的效率，请支持作者，期待您的捐赠。
+**如果您觉得此插件对您有帮助，节省了您的时间，提高了您的效率，请支持作者，期待您的捐赠。**
+
+**您捐赠一半将会捐赠给 <a href="https://gitcode.com/continew/continew-admin">ContiNew Admin</a> 项目。感谢您的支持！**
+
+
 
 ![](src/main/resources/icons/wx.jpg)
 
