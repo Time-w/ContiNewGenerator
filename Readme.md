@@ -40,6 +40,13 @@ Support preview and save table configuration information, regenerate table can s
 <br/>
 支持预览，支持保存表生成配置信息，同一张表再次生成可回显上次配置信息
 
+插件地址
+
+<script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+<script>
+  MarketplaceWidget.setupMarketplaceWidget('card', 28988, "top.continew.ContiNewGenerator");
+</script>
+
 # 使用方式
 
 ![](./doc/1.png)
