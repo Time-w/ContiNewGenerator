@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class ContiNewConfigPersistent implements PersistentStateComponent<ContiNewConfigPersistent> {
 
 	private Boolean highLight;
+	private Boolean autoRunSql;
 	private String requestExcludeText;
 	private String responseExcludeText;
 	private String requiredExcludeText;
@@ -33,6 +34,9 @@ public class ContiNewConfigPersistent implements PersistentStateComponent<ContiN
 		}
 		if (config.getHighLight() == null) {
 			config.setHighLight(true);
+		}
+		if (config.getAutoRunSql() == null) {
+			config.setAutoRunSql(true);
 		}
 		if (config.getRequestExcludeText() == null) {
 			config.setRequestExcludeText("createUser,createTime,updateUser,updateTime,deleteUser,deleteTime,delFlag,isDeleted,deletedBy");

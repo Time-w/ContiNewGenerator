@@ -24,6 +24,7 @@ public class ContiNewGeneratorConfigUI {
 	private JComboBox<String> numberTypeComboBox;
 	private JComboBox<String> dateTypeComboBox;
 	private JCheckBox highlightCheckBox;
+	private JCheckBox autoRunSqlCheckBox;
 	private JComboBox<String> booleanTypeComboBox;
 	ContiNewConfigPersistent contiNewConfigPersistent = ContiNewConfigPersistent.getInstance();
 
@@ -37,6 +38,7 @@ public class ContiNewGeneratorConfigUI {
 
 	public void apply() {
 		contiNewConfigPersistent.setHighLight(highlightCheckBox.isSelected());
+		contiNewConfigPersistent.setAutoRunSql(autoRunSqlCheckBox.isSelected());
 		contiNewConfigPersistent.setRequestExcludeText(requestExcludeTextField.getText());
 		contiNewConfigPersistent.setResponseExcludeText(responseExcludeTextField.getText());
 		contiNewConfigPersistent.setRequiredExcludeText(requiredExcludeTextField.getText());
@@ -49,6 +51,7 @@ public class ContiNewGeneratorConfigUI {
 
 	public void reset() {
 		highlightCheckBox.setSelected(contiNewConfigPersistent.getHighLight());
+		autoRunSqlCheckBox.setSelected(contiNewConfigPersistent.getAutoRunSql());
 		requestExcludeTextField.setText(contiNewConfigPersistent.getRequestExcludeText());
 		responseExcludeTextField.setText(contiNewConfigPersistent.getResponseExcludeText());
 		requiredExcludeTextField.setText(contiNewConfigPersistent.getRequiredExcludeText());
@@ -61,6 +64,7 @@ public class ContiNewGeneratorConfigUI {
 
 	public boolean isModified() {
 		return contiNewConfigPersistent.getHighLight() != highlightCheckBox.isSelected() ||
+				contiNewConfigPersistent.getAutoRunSql() != autoRunSqlCheckBox.isSelected() ||
 				!Objects.equals(contiNewConfigPersistent.getRequestExcludeText(), requestExcludeTextField.getText()) ||
 				!Objects.equals(contiNewConfigPersistent.getResponseExcludeText(), responseExcludeTextField.getText()) ||
 				!Objects.equals(contiNewConfigPersistent.getRequiredExcludeText(), requiredExcludeTextField.getText()) ||

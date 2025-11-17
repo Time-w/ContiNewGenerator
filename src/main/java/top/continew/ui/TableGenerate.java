@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.Action;
@@ -56,6 +57,7 @@ import top.continew.persistent.table.FieldProperties;
 import top.continew.utils.CommonUtil;
 import top.continew.utils.DateUtils;
 import top.continew.utils.NotificationUtil;
+import top.continew.utils.RunSqlScriptUtil;
 import top.continew.version.CommonTemplateEnum;
 import top.continew.version.JavaTemplateEnum;
 import top.continew.version.TemplateEnum;
@@ -448,10 +450,12 @@ public class TableGenerate extends DialogWrapper {
 	private void generateCode(Project project, Object selectedItem, Object moduleSelectItem) {
 		Map<String, Object> dataModel = getDataModel(project, selectedItem, moduleSelectItem);
 		ContiNewGeneratorPersistent instance = ContiNewGeneratorPersistent.getInstance(project);
+		ContiNewConfigPersistent configPersistent = ContiNewConfigPersistent.getInstance();
 		String projectPath = instance.getProjectPath();
 		String vuePath = instance.getVuePath();
 		String packageName = instance.getPackageName();
 		boolean isOverride = instance.isOverride();
+		Boolean autoRunSql = configPersistent.getAutoRunSql();
 		String version = instance.getVersion();
 		String className = dataModel.get("className") + "";
 		// 使用与依赖相同的版本
@@ -460,7 +464,7 @@ public class TableGenerate extends DialogWrapper {
 		cfg.setSharedVariable("statics", build.getStaticModels());
 		// 设置模板所在目录
 		cfg.setClassForTemplateLoading(TableGenerate.class, "/templates");
-
+		AtomicReference<String> sqlFile = new AtomicReference<>("");
 		//String jsonString = JSONObject.toJSONString(dataModel);
 		//System.out.println("jsonString = " + jsonString);
 		//java
@@ -496,6 +500,9 @@ public class TableGenerate extends DialogWrapper {
 						if (!file.exists() || isOverride) {
 							generateFile(cfg, dataModel, templatePath, file);
 						}
+						if (file.getName().endsWith("Menu.sql")) {
+							sqlFile.set(file.getPath());
+						}
 					});
 		}
 		if (StringUtils.isNotBlank(vuePath)) {
@@ -520,6 +527,9 @@ public class TableGenerate extends DialogWrapper {
 					});
 		}
 		JOptionPane.showMessageDialog(rootPanel, "代码生成成功,快去看看吧!", "生成成功!", JOptionPane.INFORMATION_MESSAGE);
+		if (autoRunSql != null && autoRunSql) {
+			RunSqlScriptUtil.runSqlScript(sqlFile.get(), project);
+		}
 		this.dispose();
 	}
 

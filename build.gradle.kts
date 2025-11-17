@@ -63,6 +63,7 @@ dependencies {
 
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("commons-io:commons-io:2.18.0")
+    implementation("org.mybatis:mybatis:3.5.7")
 //    implementation("log4j:log4j:1.2.17")
 //    implementation("com.alibaba:fastjson:1.2.83")
 }
